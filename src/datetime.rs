@@ -303,13 +303,13 @@ impl DateTime {
         )
     }
 
-    fn to_string_default(&self) -> String {
+    pub fn to_string_default(&self) -> String {
         let mut s = Vec::new();
         self.fmt_default(&mut s).unwrap();
         String::from_utf8(s).unwrap()
     }
 
-    fn to_string_traditional(&self) -> String {
+    pub fn to_string_traditional(&self) -> String {
         let mut s = Vec::new();
         self.fmt_traditional(&mut s).unwrap();
         String::from_utf8(s).unwrap()
