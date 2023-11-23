@@ -14,9 +14,17 @@ use crate::*;
 /// 
 /// The first offset was chosen for this library.
 pub(crate) const REPUBLICAN_EPOCH_GREGORIAN_SECONDS: i64 = -5594227200;
-pub(crate) const OFFSET_GREGORIAN_SECONDS: i64 = 18*60;
+#[cfg(not(any(feature="no-time-offset", feature="average-time-offset")))]
+pub(crate) const OFFSET_GREGORIAN_SECONDS: i64 = 1080;
+#[cfg(feature="no-time-offset")]
+pub(crate) const OFFSET_GREGORIAN_SECONDS: i64 = 0;
+#[cfg(feature="average-time-offset")]
+pub(crate) const OFFSET_GREGORIAN_SECONDS: i64 = 1029;
 pub(crate) const REPUBLICAN_SECONDS_PER_DAY: i64 = 100000;
 pub(crate) const GREGORIAN_SECONDS_PER_DAY: i64 = 86400;
+
+#[cfg(all(feature="no-time-offset", feature="average-time-offset"))]
+compile_error!("You cannot enable both no-time-offset and average-time-offset features at the same time");
 
 /// It is necessary to have a different timestamp than UNIX systems as seconds are different in the Republican Calendar.
 /// Indeed, there are 86400 seconds in a day in the Gregorian Calendar, but 100000 seconds in a day in the Republican Calendar.
