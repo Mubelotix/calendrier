@@ -26,7 +26,11 @@ pub fn get_year_start(republican_year: i64) -> i64 {
             let day_start = get_year_start(1208) + days_since_1208 * REPUBLICAN_SECONDS_PER_DAY;
             day_start
         } else {
-            todo!()
+            let sextile_years_since_m210 = -(republican_year + 210) / 4;
+            let standard_years_since_m210 = -(republican_year + 210) - sextile_years_since_m210;
+            let days_since_m210 = sextile_years_since_m210 * 366 + standard_years_since_m210 * 365;
+            let day_start = get_year_start(-209) - (days_since_m210+366) * REPUBLICAN_SECONDS_PER_DAY;
+            day_start
         }
     })
 }
@@ -66,6 +70,11 @@ fn test_year_start() {
     assert_eq!(365, get_day_count(1210));
     assert_eq!(366, get_day_count(1211)); // sextile
 
+    assert_eq!(365, get_day_count(-211));
+    assert_eq!(365, get_day_count(-212));
+    assert_eq!(365, get_day_count(-213));
+    assert_eq!(366, get_day_count(-214)); // sextile
+
     // Verify coherence
     let mut previous_year_start = get_year_start(1);
     for year in 2..=10000 {
@@ -76,5 +85,16 @@ fn test_year_start() {
             "year {}", year
         );
         previous_year_start = year_start;
+    }   
+    let mut next_year_start = get_year_start(-1);
+    for year in (-10000..=-2).rev() {
+        let year_start = get_year_start(year);
+        assert_eq!(
+            year_start,
+            next_year_start - get_day_count(year) * REPUBLICAN_SECONDS_PER_DAY,
+            "year {}", year
+        );
+        next_year_start = year_start;
     }
+
 }
