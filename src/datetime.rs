@@ -1,6 +1,8 @@
 use crate::*;
 
 const SECONDS_PER_DAY: i64 = 100000;
+const DAYS_PER_MONTH: i64 = 30;
+const SECONDS_PER_MONTH: i64 = SECONDS_PER_DAY*DAYS_PER_MONTH;
 const SECONDS_PER_YEAR: i64 = 365*SECONDS_PER_DAY;
 const SECONDS_PER_FRANCIADE: i64 = SECONDS_PER_YEAR*4 + SECONDS_PER_DAY;
 
@@ -47,6 +49,21 @@ impl DateTime {
             false => year0,
         }
     }
+
+    /// Returns the month but starting from 0.
+    /// A 13th month of 5 or 6 days is added at the end of the year.
+    pub fn month0(&self) -> i64 {
+        let year0 = self.year0();
+        let seconds_in_year = self.timestamp.seconds - year0 * SECONDS_PER_YEAR;
+        let month = seconds_in_year.div_euclid(SECONDS_PER_MONTH);
+        month
+    }
+
+    /// Returns the month, starting from 1.
+    /// A 13th month of 5 or 6 days is added at the end of the year.
+    pub fn month(&self) -> i64 {
+        self.month0() + 1
+    }
 }
 
 #[cfg(test)]
@@ -81,5 +98,16 @@ mod tests {
         let datetime = DateTime::from_timestamp(Timestamp { seconds: -SECONDS_PER_YEAR-SECONDS_PER_DAY-1 });
         assert_eq!(datetime.year0(), -2);
         assert_eq!(datetime.year(), -2);
+    }
+
+    #[test]
+    fn test_month() {
+        let datetime = DateTime::from_timestamp(Timestamp { seconds: 0 });
+        assert_eq!(datetime.month0(), 0);
+        assert_eq!(datetime.month(), 1);
+        
+        let datetime = DateTime::from_timestamp(Timestamp { seconds: -1 });
+        assert_eq!(datetime.month0(), 12);
+        assert_eq!(datetime.month(), 13);
     }
 }
