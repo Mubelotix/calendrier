@@ -29,7 +29,7 @@ pub enum SansculottideDay {
 }
 
 impl RegularDay {
-    pub fn name(&self) -> &'static str {
+    pub const fn name(&self) -> &'static str {
         match self {
             Self::Primedi => "Primidi",
             Self::Duodi => "Duodi",
@@ -44,7 +44,7 @@ impl RegularDay {
         }
     }
 
-    pub fn name_lc(&self) -> &'static str {
+    pub const fn name_lc(&self) -> &'static str {
         match self {
             Self::Primedi => "primidi",
             Self::Duodi => "duodi",
@@ -58,6 +58,27 @@ impl RegularDay {
             Self::Décadi => "décadi",
         }
     }
+
+    /// Returns identifier from 1 to 10
+    pub const fn num(&self) -> u8 {
+        match self {
+            Self::Primedi => 1,
+            Self::Duodi => 2,
+            Self::Tridi => 3,
+            Self::Quartidi => 4,
+            Self::Quintidi => 5,
+            Self::Sextidi => 6,
+            Self::Septidi => 7,
+            Self::Octidi => 8,
+            Self::Nonidi => 9,
+            Self::Décadi => 10,
+        }
+    }
+
+    /// Returns identifier from 0 to 9
+    pub const fn num0(&self) -> u8 {
+        self.num() - 1
+    }
 }
 
 impl std::fmt::Display for RegularDay {
@@ -67,7 +88,7 @@ impl std::fmt::Display for RegularDay {
 }
 
 impl SansculottideDay {
-    pub fn name(&self) -> &'static str {
+    pub const fn name(&self) -> &'static str {
         match self {
             Self::Vertu => "Jour de la vertu",
             Self::Génie => "Jour du génie",
@@ -78,7 +99,7 @@ impl SansculottideDay {
         }
     }
 
-    pub fn name_lc(&self) -> &'static str {
+    pub const fn name_lc(&self) -> &'static str {
         match self {
             Self::Vertu => "jour de la vertu",
             Self::Génie => "jour du génie",
@@ -87,6 +108,23 @@ impl SansculottideDay {
             Self::Récompenses => "jour des récompenses",
             Self::Révolution => "jour de la Révolution",
         }
+    }
+
+    /// Returns identifier from 1 to 6
+    pub const fn num(&self) -> u8 {
+        match self {
+            Self::Vertu => 1,
+            Self::Génie => 2,
+            Self::Travail => 3,
+            Self::Opinion => 4,
+            Self::Récompenses => 5,
+            Self::Révolution => 6,
+        }
+    }
+
+    /// Returns identifier from 0 to 5
+    pub const fn num0(&self) -> u8 {
+        self.num() - 1
     }
 }
 
@@ -97,17 +135,33 @@ impl std::fmt::Display for SansculottideDay {
 }
 
 impl Day {
-    pub fn name(&self) -> &'static str {
+    pub const fn name(&self) -> &'static str {
         match self {
             Self::Regular(day) => day.name(),
             Self::Sansculottide(day) => day.name(),
         }
     }
 
-    pub fn name_lc(&self) -> &'static str {
+    pub const fn name_lc(&self) -> &'static str {
         match self {
             Self::Regular(day) => day.name_lc(),
             Self::Sansculottide(day) => day.name_lc(),
+        }
+    }
+
+    /// Returns identifier from 1 to 10
+    pub const fn num(&self) -> u8 {
+        match self {
+            Self::Regular(day) => day.num(),
+            Self::Sansculottide(day) => day.num(),
+        }
+    }
+
+    /// Returns identifier from 0 to 9
+    pub const fn num0(&self) -> u8 {
+        match self {
+            Self::Regular(day) => day.num0(),
+            Self::Sansculottide(day) => day.num0(),
         }
     }
 }
