@@ -209,11 +209,18 @@ impl DateTime {
         (self.hour, self.minute, self.second)
     }
 
+    /// Returns the timestamp
+    pub fn timestamp(&self) -> Timestamp {
+        Timestamp {
+            seconds: get_year_start0(self.year0) + self.month0 * SECONDS_PER_MONTH + self.day0 * SECONDS_PER_DAY + self.hour * 10000 + self.minute * 100 + self.second,
+        }
+    }
+
     fn fmt_default(&self, f: &mut impl std::io::Write) -> std::io::Result<()> {
         write!(
             f,
             "{} {} {} {}",
-            self.weekday_name(),
+            self.decade_day(),
             self.day(),
             self.month_name(),
             self.year(),
@@ -279,7 +286,7 @@ impl DateTime {
         write!(
             f,
             "{} {} {} an {}{}{}{}{}{}{}",
-            self.weekday_name(),
+            self.decade_day(),
             self.day(),
             self.month_name(),
             thousand_years, five_hundred_years, hundred_years, fifty_years, ten_years, five_years, one_year
@@ -353,7 +360,7 @@ mod tests {
         
         let datetime = DateTime::from_timestamp(Timestamp { seconds: get_year_start(4)-1 });
         assert_eq!(datetime.day0(), 5); // Jour de la révolution
-        assert_eq!(datetime.weekday_name(), "Jour de la Révolution");
+        assert_eq!(datetime.decade_day().name(), "Jour de la Révolution");
         assert_eq!(datetime.day(), 6);
     }
 

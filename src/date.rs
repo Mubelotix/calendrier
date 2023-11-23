@@ -166,6 +166,13 @@ impl Date {
         }
     }
 
+    /// Returns the timestamp
+    pub fn timestamp(&self) -> Timestamp {
+        Timestamp {
+            seconds: get_year_start0(self.year0) + self.month0 * SECONDS_PER_MONTH + self.day0 * SECONDS_PER_DAY,
+        }
+    }
+
     fn fmt_default(&self, f: &mut impl std::io::Write) -> std::io::Result<()> {
         write!(
             f,
