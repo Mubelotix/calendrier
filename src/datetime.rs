@@ -44,32 +44,19 @@ impl DateTime {
         }
     }
 
-    /// Returns the franciade and the year from 0..=3 in the franciade.
-    pub fn franciade0_year0(&self) -> (i64, i64) {
-        let franciade0 = self.franciade0();
-        let seconds_in_franciade = self.timestamp.seconds - franciade0 * SECONDS_PER_FRANCIADE;
-        let year0 = seconds_in_franciade.div_euclid(SECONDS_PER_YEAR).clamp(0, 3);
-        (franciade0, year0)
-    }
-
     /// Returns the year but starting from 0.
     pub fn year0(&self) -> i64 {
-        let (franciade0, years_in_franciade) = self.franciade0_year0();
-        franciade0 * 4 + years_in_franciade
+        ts_to_year0(self.timestamp.seconds)
     }
 
     /// Returns the year but starting from 1.
     pub fn year(&self) -> i64 {
-        let year0 = self.year0();
-        match year0 >= 0 {
-            true => year0 + 1,
-            false => year0,
-        }
+        ts_to_year(self.timestamp.seconds)
     }
 
     fn seconds_in_year(&self) -> i64 {
-        let (franciade0, years_in_franciade) = self.franciade0_year0();
-        let seconds_in_year = self.timestamp.seconds - franciade0 * SECONDS_PER_FRANCIADE - years_in_franciade * SECONDS_PER_YEAR;
+        let year0 = self.year0();
+        let seconds_in_year = self.timestamp.seconds - get_year_start0(year0);
         seconds_in_year
     }
 
@@ -376,7 +363,7 @@ mod tests {
         assert_eq!(datetime.day0(), 0);
         assert_eq!(datetime.day(), 1);
         
-        let datetime = DateTime::from_timestamp(Timestamp { seconds: -1 });
+        let datetime = DateTime::from_timestamp(Timestamp { seconds: get_year_start(4)-1 });
         assert_eq!(datetime.day0(), 5); // Jour de la révolution
         assert_eq!(datetime.weekday_name(), "Jour de la Révolution");
         assert_eq!(datetime.day(), 6);

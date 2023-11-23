@@ -2,8 +2,13 @@
 
 Crate for handling dates in the french Revolutionary calendar.
 
-It is able to provide precise dates from 1583 to 2999 (years whose equinoxes are well-known).
+It is able to provide correct dates from 1583 to 2999 (years whose equinoxes are well-known).
+This is one of the only and most correct implementations of the entire Internet.
+Outside of this range, years will begin to shift by one day every few years.
+
 The equinoxe dates [were collected and computed](https://www.imcce.fr/newsletter/docs/Equinoxe_printemps_1583_2999.pdf) by the Observatoire de Paris.
+
+A time shift of around 15 minutes is applied to match the ancient time reference.
 
 ## Calendar specification
 
