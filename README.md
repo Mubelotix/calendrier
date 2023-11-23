@@ -2,7 +2,7 @@
 
 Crate for handling dates in the french Revolutionary calendar.
 
-Will provide precise dates from 1583 to 2999 (years whose equinoxes are known).
+It is able to provide precise dates from 1583 to 2999 (years whose equinoxes are well-known).
 The equinoxe dates [were collected and computed](https://www.imcce.fr/newsletter/docs/Equinoxe_printemps_1583_2999.pdf) by the Observatoire de Paris.
 
 ## Calendar specification

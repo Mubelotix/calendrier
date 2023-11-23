@@ -1,29 +1,49 @@
+use crate::*;
+
 /// Starts at gregorian year 1583, republican year -209
+/// Ends at gregorian year 2999, republican year 1208
 const YEAR_STARTS: &[i64] = &[
     YEAR_START,
 ];
 
 /// Starts at gregorian year 1583, republican year -209
+/// Ends at gregorian year 2999, republican year 1208
 const DAY_COUNTS: &[i64] = &[
     DAY_COUNT,
 ];
 
-pub const fn get_year_start(republican_year: i64) -> i64 {
+pub fn get_year_start(republican_year: i64) -> i64 {
     let republican_year0 = match republican_year > 0 {
         true => republican_year - 1,
         false => republican_year
     };
     let index = republican_year0 + 209;
-    YEAR_STARTS[index as usize] // TODO: check if index is in bounds
+    YEAR_STARTS.get(index as usize).cloned().unwrap_or_else(|| {
+        if republican_year > 0 {
+            let sextile_years_since_1208 = (republican_year - 1208) / 4;
+            let standard_years_since_1208 = republican_year - 1208 - sextile_years_since_1208;
+            let days_since_1208 = sextile_years_since_1208 * 366 + standard_years_since_1208 * 365;
+            let day_start = get_year_start(1208) + days_since_1208 * REPUBLICAN_SECONDS_PER_DAY;
+            day_start
+        } else {
+            todo!()
+        }
+    })
 }
 
-pub const fn get_day_count(republican_year: i64) -> i64 {
+pub fn get_day_count(republican_year: i64) -> i64 {
     let republican_year0 = match republican_year > 0 {
         true => republican_year - 1,
         false => republican_year
     };
     let index = republican_year0 + 209;
-    DAY_COUNTS[index as usize] // TODO: check if index is in bounds
+    DAY_COUNTS.get(index as usize).cloned().unwrap_or_else(|| {
+        if (republican_year0 + 2) % 4 == 0 {
+            366
+        } else {
+            365
+        }
+    })
 }
 
 #[test]
@@ -40,4 +60,21 @@ fn test_year_start() {
     assert_eq!(365, get_day_count(9));
     assert_eq!(365, get_day_count(10));
     assert_eq!(366, get_day_count(11)); // sextile
+
+    assert_eq!(365, get_day_count(1208));
+    assert_eq!(365, get_day_count(1209));
+    assert_eq!(365, get_day_count(1210));
+    assert_eq!(366, get_day_count(1211)); // sextile
+
+    // Verify coherence
+    let mut previous_year_start = get_year_start(1);
+    for year in 2..=10000 {
+        let year_start = get_year_start(year);
+        assert_eq!(
+            year_start,
+            previous_year_start + get_day_count(year-1) * REPUBLICAN_SECONDS_PER_DAY,
+            "year {}", year
+        );
+        previous_year_start = year_start;
+    }
 }

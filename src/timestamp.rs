@@ -6,9 +6,9 @@ use crate::*;
 /// 09h 00m 30s UT1 = 09h 18m 30s Gregorian Time With Old Paris Time Zone
 /// -5594194770 <=> 33510
 /// -5594228280 <=> 0
-const REPUBLICAN_EPOCH_GREGORIAN_SECONDS: i64 = -5594228280;
-const REPUBLICAN_SECONDS_PER_DAY: i64 = 100000;
-const GREGORIAN_SECONDS_PER_DAY: i64 = 86400;
+pub(crate) const REPUBLICAN_EPOCH_GREGORIAN_SECONDS: i64 = -5594228280;
+pub(crate) const REPUBLICAN_SECONDS_PER_DAY: i64 = 100000;
+pub(crate) const GREGORIAN_SECONDS_PER_DAY: i64 = 86400;
 
 /// It is necessary to have a different timestamp than UNIX systems as seconds are different in the Republican Calendar.
 /// Indeed, there are 86400 seconds in a day in the Gregorian Calendar, but 100000 seconds in a day in the Republican Calendar.
