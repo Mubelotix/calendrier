@@ -33,11 +33,17 @@ impl DateTime {
         }
     }
 
-    /// Returns the year but starting from 0.
-    pub fn year0(&self) -> i64 {
+    /// Returns the franciade and the year from 0..=3 in the franciade.
+    pub fn franciade0_year0(&self) -> (i64, i64) {
         let franciade0 = self.franciade0();
         let seconds_in_franciade = self.timestamp.seconds - franciade0 * SECONDS_PER_FRANCIADE;
-        let years_in_franciade = seconds_in_franciade.div_euclid(SECONDS_PER_DAY * 365).clamp(-3, 3);
+        let year0 = seconds_in_franciade.div_euclid(SECONDS_PER_YEAR).clamp(0, 3);
+        (franciade0, year0)
+    }
+
+    /// Returns the year but starting from 0.
+    pub fn year0(&self) -> i64 {
+        let (franciade0, years_in_franciade) = self.franciade0_year0();
         franciade0 * 4 + years_in_franciade
     }
 
@@ -50,11 +56,16 @@ impl DateTime {
         }
     }
 
+    fn seconds_in_year(&self) -> i64 {
+        let (franciade0, years_in_franciade) = self.franciade0_year0();
+        let seconds_in_year = self.timestamp.seconds - franciade0 * SECONDS_PER_FRANCIADE - years_in_franciade * SECONDS_PER_YEAR;
+        seconds_in_year
+    }
+
     /// Returns the month but starting from 0.
     /// A 13th month of 5 or 6 days is added at the end of the year.
     pub fn month0(&self) -> i64 {
-        let year0 = self.year0();
-        let seconds_in_year = self.timestamp.seconds - year0 * SECONDS_PER_YEAR;
+        let seconds_in_year = self.seconds_in_year();
         let month = seconds_in_year.div_euclid(SECONDS_PER_MONTH);
         month
     }
@@ -65,11 +76,15 @@ impl DateTime {
         self.month0() + 1
     }
 
+    fn seconds_in_month(&self) -> i64 {
+        let seconds_in_year = self.seconds_in_year();
+        let seconds_in_month = seconds_in_year - self.month0() * SECONDS_PER_MONTH;
+        seconds_in_month
+    }
+
     /// Returns the day of the month but starting from 0.
     pub fn day0(&self) -> i64 {
-        let year0 = self.year0();
-        let month0 = self.month0();
-        let seconds_in_month = self.timestamp.seconds - year0 * SECONDS_PER_YEAR - month0 * SECONDS_PER_MONTH;
+        let seconds_in_month = self.seconds_in_month();
         let day = seconds_in_month.div_euclid(SECONDS_PER_DAY);
         day
     }
@@ -123,5 +138,16 @@ mod tests {
         let datetime = DateTime::from_timestamp(Timestamp { seconds: -1 });
         assert_eq!(datetime.month0(), 12);
         assert_eq!(datetime.month(), 13);
+    }
+
+    #[test]
+    fn test_day() {
+        let datetime = DateTime::from_timestamp(Timestamp { seconds: 0 });
+        assert_eq!(datetime.day0(), 0);
+        assert_eq!(datetime.day(), 1);
+        
+        let datetime = DateTime::from_timestamp(Timestamp { seconds: -1 });
+        assert_eq!(datetime.day0(), 5); // Jour de la révolution
+        assert_eq!(datetime.day(), 6);
     }
 }
