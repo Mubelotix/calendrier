@@ -24,9 +24,10 @@ impl DateTime {
     /// Returns the franciade but starting from 1.
     /// There is no franciade 0.
     pub fn franciade(&self) -> i64 {
-        match self.franciade0() >= 0 {
-            true => self.franciade0() + 1,
-            false => self.franciade0(),
+        let franciade0 = self.franciade0();
+        match franciade0 >= 0 {
+            true => franciade0 + 1,
+            false => franciade0,
         }
     }
 
@@ -34,19 +35,16 @@ impl DateTime {
     pub fn year0(&self) -> i64 {
         let franciade0 = self.franciade0();
         let seconds_in_franciade = self.timestamp.seconds - franciade0 * SECONDS_PER_FRANCIADE;
-        let years_in_franciade = seconds_in_franciade / (SECONDS_PER_DAY * 365);
-        if years_in_franciade > 4 {
-            4
-        } else {
-            years_in_franciade
-        }
+        let years_in_franciade = seconds_in_franciade.div_euclid(SECONDS_PER_DAY * 365).clamp(-3, 3);
+        franciade0 * 4 + years_in_franciade
     }
 
     /// Returns the year but starting from 1.
     pub fn year(&self) -> i64 {
-        match self.year0() >= 0 {
-            true => self.year0() + 1,
-            false => self.year0() - 1,
+        let year0 = self.year0();
+        match year0 >= 0 {
+            true => year0 + 1,
+            false => year0,
         }
     }
 }
@@ -63,5 +61,15 @@ mod tests {
         let datetime = DateTime::from_timestamp(Timestamp { seconds: -1 });
         assert_eq!(datetime.franciade0(), -1);
         assert_eq!(datetime.franciade(), -1);
+    }
+
+    #[test]
+    fn test_year() {
+        let datetime = DateTime::from_timestamp(Timestamp { seconds: 0 });
+        assert_eq!(datetime.year0(), 0);
+        assert_eq!(datetime.year(), 1);
+        let datetime = DateTime::from_timestamp(Timestamp { seconds: -1 });
+        assert_eq!(datetime.year0(), -1);
+        assert_eq!(datetime.year(), -1);
     }
 }
