@@ -155,6 +155,18 @@ impl DateTime {
         let seconds_in_week = seconds_in_month - self.week0() * SECONDS_PER_WEEK;
         seconds_in_week
     }
+
+    /// Returns the day of the week but starting from 0.
+    pub fn weekday0(&self) -> i64 {
+        let seconds_in_week = self.seconds_in_week();
+        let weekday = seconds_in_week.div_euclid(SECONDS_PER_DAY);
+        weekday
+    }
+
+    /// Returns the day of the week, starting from 1.
+    pub fn weekday(&self) -> i64 {
+        self.weekday0() + 1
+    }
 }
 
 #[cfg(test)]
