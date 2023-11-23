@@ -3,8 +3,16 @@ use crate::*;
 /// Sources:
 /// https://www.imcce.fr/newsletter/docs/Equinoxe_automne_1583_2999.pdf
 /// https://fr.wikisource.org/wiki/D%C3%A9cret_de_la_Convention_nationale_portant_sur_la_cr%C3%A9ation_du_calendrier_r%C3%A9publicain
-/// 09h 00m 30s UT1 = 09h 18m 30s Gregorian Time With Old Paris Time Zone
-/// There is a 18 minutes offset between the times.
+/// 
+/// From article I, we know that:
+/// 09:00:30 today = 09:18:30 then
+/// Meaning there is a 1080 gregorian seconds offset between the times.
+/// 
+/// From article V, we know that:
+/// 14:55:19 today = 15:11:38 then
+/// Meaning there is a 979 gregorian seconds offset between the times.
+/// 
+/// The first offset was chosen for this library.
 pub(crate) const REPUBLICAN_EPOCH_GREGORIAN_SECONDS: i64 = -5594227200;
 pub(crate) const OFFSET_GREGORIAN_SECONDS: i64 = 18*60;
 pub(crate) const REPUBLICAN_SECONDS_PER_DAY: i64 = 100000;
