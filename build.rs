@@ -15,9 +15,12 @@ pub fn ts_from_unix(unix_timestamp: i64) -> i64 {
 fn main() {
     println!("cargo:rerun-if-changed=data/equinoxes.txt");
     println!("cargo:rerun-if-changed=src/equinoxes_pattern.rs");
+    println!("cargo:rerun-if-changed=src/years_pattern.rs");
 
     let mut equinoxes = HashMap::new();
+    let mut year_starts = HashMap::new();
 
+    // Read equinoxes.txt
     let data = std::fs::read_to_string("data/equinoxes.txt").expect("Could not read equinoxes.txt");
     for line in data.lines().filter(|l| !l.is_empty()) {
         let numbers = line.split(|c: char| !c.is_numeric()).filter(|s| !s.is_empty()).map(|s| s.parse::<u32>().unwrap()).collect::<Vec<_>>();
@@ -40,6 +43,7 @@ fn main() {
         equinoxes.insert(republican_year, ts);
     }
 
+    // Generate equinoxes.rs
     let mut code = std::fs::read_to_string("src/equinoxes_pattern.rs").expect("Could not read src/equinoxes_pattern.rs");
     for gregorian_year in 1583..=2999 {
         let republican_year0 = gregorian_year - 1792;
@@ -52,4 +56,27 @@ fn main() {
     }
     code = code.replace("EQUINOX,", "");
     std::fs::write("src/equinoxes.rs", code).expect("Could not write src/equinoxes.rs");
+
+    // Generate years.rs
+    let mut code = std::fs::read_to_string("src/years_pattern.rs").expect("Could not read src/years_pattern.rs");
+    for gregorian_year in 1583..=2999 {
+        let republican_year0 = gregorian_year - 1792;
+        let republican_year = match republican_year0 >= 0 {
+            true => republican_year0 + 1,
+            false => republican_year0
+        };
+        let ts = equinoxes.get(&republican_year).expect(&format!("Could not find equinox for year {republican_year} (gregorian {gregorian_year})"));
+        let day_start = ts - ts.rem_euclid(REPUBLICAN_SECONDS_PER_DAY);
+        year_starts.insert(gregorian_year, day_start);
+        code = code.replace("YEAR_START,", format!("{day_start}, YEAR_START,").as_str());
+    }
+    for gregorian_year in 1583..2999 {
+        let year_start = year_starts.get(&gregorian_year).expect(&format!("Could not find year (greg {gregorian_year})"));
+        let next_year_start = year_starts.get(&(gregorian_year + 1)).expect(&format!("Could not find year (greg {gregorian_year}+1)"));
+        let day_count = (next_year_start - year_start) / REPUBLICAN_SECONDS_PER_DAY;
+        code = code.replace("DAY_COUNT,", format!("{day_count}, DAY_COUNT,").as_str());
+    }
+    code = code.replace("YEAR_START,", "");
+    code = code.replace("DAY_COUNT,", "");
+    std::fs::write("src/years.rs", code).expect("Could not write src/years.rs");
 }

@@ -21,7 +21,7 @@ IV.
 La première année de la République française a commencé à minuit le 22 septembre 1792, et a fini à minuit, séparant le 21 du 22 septembre 1793.
 
 V.
-La seconde année a commencé le 22 septembre 1793 à minuit, l’équinoxe vrai d’automne étant arrivé ce jourlà, pour l’observatoire de Paris, à 3 heures 11 minutes et 38 secondes du soir.
+La seconde année a commencé le 22 septembre 1793 à minuit, l’équinoxe vrai d’automne étant arrivé ce jour là, pour l’observatoire de Paris, à 3 heures 11 minutes et 38 secondes du soir.
 
 VI.
 Le décret qui fixait le commencement de la seconde année au Ier janvier 1793, est rapporté ; tous les actes datés l’an second de la République, passés dans le courant du Ier janvier au 21 septembre inclusivement, sont regardés comme appartenant à la première année de la République.
@@ -92,3 +92,6 @@ Les professeurs, les instituteurs et institutrices, les pères et mères de fami
 XVI.
 Tous les quatre ans, ou toutes les franciades, au jour de la révolution, il sera célébré des jeux républicains, en mémoire de la révolution française.
 ```
+
+The contradiction between article III and IX is resolved by prioritizing article III.
+Indeed, a year isn't exactly 365.25 days long, so Franciades will not always be 365*4+1 days long.

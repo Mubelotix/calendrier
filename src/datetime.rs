@@ -19,6 +19,15 @@ impl DateTime {
         }
     }
 
+    pub fn from_ymd_hms(year: i64, month: i64, day: i64, hour: i64, minute: i64, second: i64) -> Self {
+        let seconds = year * SECONDS_PER_YEAR + month * SECONDS_PER_MONTH + day * SECONDS_PER_DAY + hour * 10000 + minute * 100 + second;
+        Self {
+            timestamp: Timestamp {
+                seconds,
+            },
+        }
+    }
+
     /// Returns the franciade but starting from 0.
     /// A franciade is a period of 4 years.
     pub fn franciade0(&self) -> i64 {
