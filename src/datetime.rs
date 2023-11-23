@@ -58,9 +58,14 @@ mod tests {
         let datetime = DateTime::from_timestamp(Timestamp { seconds: 0 });
         assert_eq!(datetime.franciade0(), 0);
         assert_eq!(datetime.franciade(), 1);
+
         let datetime = DateTime::from_timestamp(Timestamp { seconds: -1 });
         assert_eq!(datetime.franciade0(), -1);
         assert_eq!(datetime.franciade(), -1);
+
+        let datetime = DateTime::from_timestamp(Timestamp { seconds: SECONDS_PER_YEAR*5 });
+        assert_eq!(datetime.franciade0(), 1);
+        assert_eq!(datetime.franciade(), 2);
     }
 
     #[test]
@@ -68,8 +73,13 @@ mod tests {
         let datetime = DateTime::from_timestamp(Timestamp { seconds: 0 });
         assert_eq!(datetime.year0(), 0);
         assert_eq!(datetime.year(), 1);
+        
         let datetime = DateTime::from_timestamp(Timestamp { seconds: -1 });
         assert_eq!(datetime.year0(), -1);
         assert_eq!(datetime.year(), -1);
+
+        let datetime = DateTime::from_timestamp(Timestamp { seconds: -SECONDS_PER_YEAR-SECONDS_PER_DAY-1 });
+        assert_eq!(datetime.year0(), -2);
+        assert_eq!(datetime.year(), -2);
     }
 }
