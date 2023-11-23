@@ -16,6 +16,7 @@ fn main() {
     println!("cargo:rerun-if-changed=data/equinoxes.txt");
     println!("cargo:rerun-if-changed=src/equinoxes_pattern.rs");
     println!("cargo:rerun-if-changed=src/years_pattern.rs");
+    let out_dir = std::env::var("OUT_DIR").expect("Could not find OUT_DIR");
 
     let mut equinoxes = HashMap::new();
     let mut year_starts = HashMap::new();
@@ -55,7 +56,7 @@ fn main() {
         code = code.replace("EQUINOX,", format!("{ts}, EQUINOX,").as_str());
     }
     code = code.replace("EQUINOX,", "");
-    std::fs::write("src/equinoxes.rs", code).expect("Could not write src/equinoxes.rs");
+    std::fs::write(format!("{out_dir}/equinoxes.rs"), code).expect("Could not write src/equinoxes.rs");
 
     // Generate years.rs
     let mut code = std::fs::read_to_string("src/years_pattern.rs").expect("Could not read src/years_pattern.rs");
@@ -78,5 +79,5 @@ fn main() {
     }
     code = code.replace("YEAR_START,", "");
     code = code.replace("DAY_COUNT,", "");
-    std::fs::write("src/years.rs", code).expect("Could not write src/years.rs");
+    std::fs::write(format!("{out_dir}/years.rs"), code).expect("Could not write src/years.rs");
 }
