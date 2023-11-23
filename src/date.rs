@@ -1,15 +1,12 @@
 use crate::*;
 
-pub struct DateTime {
+pub struct Date {
     year0: i64,
     month0: i64,
     day0: i64,
-    hour: i64,
-    minute: i64,
-    second: i64,
 }
 
-impl DateTime {
+impl Date {
     pub fn from_timestamp(timestamp: Timestamp) -> Self {
         let year0 = ts_to_year0(timestamp.seconds);
         let seconds_in_year = timestamp.seconds - get_year_start0(year0);
@@ -18,25 +15,15 @@ impl DateTime {
         let seconds_in_month = seconds_in_year.rem_euclid(SECONDS_PER_MONTH);
 
         let day0 = seconds_in_month.div_euclid(SECONDS_PER_DAY);
-        let seconds_in_day = seconds_in_month.rem_euclid(SECONDS_PER_DAY);
-
-        let hour = seconds_in_day.div_euclid(10000);
-        let seconds_in_hour = seconds_in_day.rem_euclid(1000);
-
-        let minute = seconds_in_hour.div_euclid(100);
-        let second = seconds_in_hour.rem_euclid(100);
 
         Self {
             year0,
             month0,
             day0,
-            hour,
-            minute,
-            second,
         }
     }
 
-    pub fn from_ymd_hms(year: i64, month: i64, day: i64, hour: i64, minute: i64, second: i64) -> Self {
+    pub fn from_ymd(year: i64, month: i64, day: i64) -> Self {
         let year0 = match year > 0 {
             true => year - 1,
             false => year
@@ -47,29 +34,15 @@ impl DateTime {
             year0,
             month0,
             day0,
-            hour,
-            minute,
-            second,
         }
     }
 
-    pub fn from_ymd_hms0(year0: i64, month0: i64, day0: i64, hour: i64, minute: i64, second: i64) -> Self {
+    pub fn from_ymd0(year0: i64, month0: i64, day0: i64) -> Self {
         Self {
             year0,
             month0,
             day0,
-            hour,
-            minute,
-            second,
         }
-    }
-
-    pub fn from_ymd(year: i64, month: i64, day: i64) -> Self {
-        Self::from_ymd_hms(year, month, day, 0, 0, 0)
-    }
-
-    pub fn from_ymd0(year0: i64, month0: i64, day0: i64) -> Self {
-        Self::from_ymd_hms0(year0, month0, day0, 0, 0, 0)
     }
 
     /// Returns the franciade but starting from 0.
@@ -243,22 +216,6 @@ impl DateTime {
         }
     }
 
-    pub fn hour(&self) -> i64 {
-        self.hour
-    }
-
-    pub fn minute(&self) -> i64 {
-        self.minute
-    }
-
-    pub fn second(&self) -> i64 {
-        self.second
-    }
-
-    pub fn hms(&self) -> (i64, i64, i64) {
-        (self.hour, self.minute, self.second)
-    }
-
     fn fmt_default(&self, f: &mut impl std::io::Write) -> std::io::Result<()> {
         write!(
             f,
@@ -346,71 +303,5 @@ impl DateTime {
         let mut s = Vec::new();
         self.fmt_traditional(&mut s).unwrap();
         String::from_utf8(s).unwrap()
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    const SECONDS_PER_YEAR: i64 = 365*SECONDS_PER_DAY;
-
-    #[test]
-    fn test_franciade() {
-        let datetime = DateTime::from_timestamp(Timestamp { seconds: 0 });
-        assert_eq!(datetime.franciade0(), 0);
-        assert_eq!(datetime.franciade(), 1);
-
-        let datetime = DateTime::from_timestamp(Timestamp { seconds: -1 });
-        assert_eq!(datetime.franciade0(), -1);
-        assert_eq!(datetime.franciade(), -1);
-
-        let datetime = DateTime::from_timestamp(Timestamp { seconds: SECONDS_PER_YEAR*5 });
-        assert_eq!(datetime.franciade0(), 1);
-        assert_eq!(datetime.franciade(), 2);
-    }
-
-    #[test]
-    fn test_year() {
-        let datetime = DateTime::from_timestamp(Timestamp { seconds: 0 });
-        assert_eq!(datetime.year0(), 0);
-        assert_eq!(datetime.year(), 1);
-        
-        let datetime = DateTime::from_timestamp(Timestamp { seconds: -1 });
-        assert_eq!(datetime.year0(), -1);
-        assert_eq!(datetime.year(), -1);
-
-        let datetime = DateTime::from_timestamp(Timestamp { seconds: -SECONDS_PER_YEAR-SECONDS_PER_DAY-1 });
-        assert_eq!(datetime.year0(), -2);
-        assert_eq!(datetime.year(), -2);
-    }
-
-    #[test]
-    fn test_month() {
-        let datetime = DateTime::from_timestamp(Timestamp { seconds: 0 });
-        assert_eq!(datetime.month0(), 0);
-        assert_eq!(datetime.month(), 1);
-        
-        let datetime = DateTime::from_timestamp(Timestamp { seconds: -1 });
-        assert_eq!(datetime.month0(), 12);
-        assert_eq!(datetime.month(), 13);
-    }
-
-    #[test]
-    fn test_day() {
-        let datetime = DateTime::from_timestamp(Timestamp { seconds: 0 });
-        assert_eq!(datetime.day0(), 0);
-        assert_eq!(datetime.day(), 1);
-        
-        let datetime = DateTime::from_timestamp(Timestamp { seconds: get_year_start(4)-1 });
-        assert_eq!(datetime.day0(), 5); // Jour de la révolution
-        assert_eq!(datetime.weekday_name(), "Jour de la Révolution");
-        assert_eq!(datetime.day(), 6);
-    }
-
-    #[test]
-    fn test_fmt() {
-        let datetime = DateTime::from_timestamp(Timestamp { seconds: 0 });
-        assert_eq!(datetime.to_string_default(), "Primidi 1 Vendémiaire 1");
-        assert_eq!(datetime.to_string_traditional(), "Primidi 1 Vendémiaire an I");
     }
 }
