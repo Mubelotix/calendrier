@@ -58,8 +58,10 @@ pub fn get_day_count0(republican_year0: i64) -> i64 {
     })
 }
 
+const AVERAGE_SECONDS_PER_YEAR: i64 = (4 * 365 * REPUBLICAN_SECONDS_PER_DAY + REPUBLICAN_SECONDS_PER_DAY) / 4;
+
 pub fn ts_to_year0(ts: i64) -> i64 {
-    let estimated = ts / (365 * REPUBLICAN_SECONDS_PER_DAY);
+    let estimated = ts / AVERAGE_SECONDS_PER_YEAR;
     if estimated.abs() > 100_000 {
         return estimated;
     }
