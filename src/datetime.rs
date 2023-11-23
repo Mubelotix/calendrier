@@ -280,6 +280,7 @@ mod tests {
         
         let datetime = DateTime::from_timestamp(Timestamp { seconds: -1 });
         assert_eq!(datetime.day0(), 5); // Jour de la révolution
+        assert_eq!(datetime.weekday_name(), "Jour de la Révolution");
         assert_eq!(datetime.day(), 6);
     }
 }
