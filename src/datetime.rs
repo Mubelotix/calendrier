@@ -9,10 +9,16 @@ pub struct DateTime {
 }
 
 impl DateTime {
+    pub fn from_timestamp(timestamp: Timestamp) -> Self {
+        Self {
+            timestamp,
+        }
+    }
+
     /// Returns the franciade but starting from 0.
     /// A franciade is a period of 4 years.
     pub fn franciade0(&self) -> i64 {
-        self.timestamp.seconds / SECONDS_PER_FRANCIADE
+        self.timestamp.seconds.div_euclid(SECONDS_PER_FRANCIADE)
     }
 
     /// Returns the franciade but starting from 1.
@@ -20,7 +26,7 @@ impl DateTime {
     pub fn franciade(&self) -> i64 {
         match self.franciade0() >= 0 {
             true => self.franciade0() + 1,
-            false => self.franciade0() - 1,
+            false => self.franciade0(),
         }
     }
 
@@ -42,5 +48,20 @@ impl DateTime {
             true => self.year0() + 1,
             false => self.year0() - 1,
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_franciade() {
+        let datetime = DateTime::from_timestamp(Timestamp { seconds: 0 });
+        assert_eq!(datetime.franciade0(), 0);
+        assert_eq!(datetime.franciade(), 1);
+        let datetime = DateTime::from_timestamp(Timestamp { seconds: -1 });
+        assert_eq!(datetime.franciade0(), -1);
+        assert_eq!(datetime.franciade(), -1);
     }
 }
