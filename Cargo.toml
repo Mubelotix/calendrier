@@ -4,7 +4,7 @@ description = "Crate for handling dates in the french Revolutionary calendar"
 authors = ["Mubelotix <mubelotix@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
