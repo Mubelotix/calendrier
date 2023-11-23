@@ -2,6 +2,8 @@ use crate::*;
 
 const SECONDS_PER_DAY: i64 = 100000;
 const DAYS_PER_MONTH: i64 = 30;
+const DAYS_PER_WEEK: i64 = 10;
+const SECONDS_PER_WEEK: i64 = SECONDS_PER_DAY*DAYS_PER_WEEK;
 const SECONDS_PER_MONTH: i64 = SECONDS_PER_DAY*DAYS_PER_MONTH;
 const SECONDS_PER_YEAR: i64 = 365*SECONDS_PER_DAY;
 const SECONDS_PER_FRANCIADE: i64 = SECONDS_PER_YEAR*4 + SECONDS_PER_DAY;
@@ -134,6 +136,18 @@ impl DateTime {
     /// Returns the day of the month, starting from 1.
     pub fn day(&self) -> i64 {
         self.day0() + 1
+    }
+
+    /// Returns the week but starting from 0.
+    pub fn week0(&self) -> i64 {
+        let seconds_in_month = self.seconds_in_month();
+        let week = seconds_in_month.div_euclid(SECONDS_PER_WEEK);
+        week
+    }
+
+    /// Returns the week, starting from 1.
+    pub fn week(&self) -> i64 {
+        self.week0() + 1
     }
 }
 
