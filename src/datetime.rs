@@ -225,6 +225,95 @@ impl DateTime {
             _ => unreachable!(),
         }
     }
+
+    fn fmt_default(&self, f: &mut impl std::io::Write) -> std::io::Result<()> {
+        write!(
+            f,
+            "{} {} {} {}",
+            self.weekday_name(),
+            self.day(),
+            self.month_name(),
+            self.year(),
+        )
+    }
+
+    fn fmt_traditional(&self, f: &mut impl std::io::Write) -> std::io::Result<()> {
+        let mut remaining_years = self.year();
+        let thousand_years = remaining_years.div_euclid(1000);
+        remaining_years -= thousand_years * 1000;
+        let thousand_years = "M".repeat(thousand_years as usize);
+        let five_hundred_years = remaining_years.div_euclid(500);
+        remaining_years -= five_hundred_years * 500;
+        let five_hundred_years = match five_hundred_years {
+            0 => "",
+            1 => "D",
+            _ => unreachable!(),
+        };
+        let hundred_years = remaining_years.div_euclid(100);
+        remaining_years -= hundred_years * 100;
+        let hundred_years = match hundred_years {
+            0 => "",
+            1 => "C",
+            2 => "CC",
+            3 => "CCC",
+            4 => "CD",
+            _ => unreachable!(),
+        };
+        let fifty_years = remaining_years.div_euclid(50);
+        remaining_years -= fifty_years * 50;
+        let fifty_years = match fifty_years {
+            0 => "",
+            1 => "L",
+            _ => unreachable!(),
+        };
+        let ten_years = remaining_years.div_euclid(10);
+        remaining_years -= ten_years * 10;
+        let ten_years = match ten_years {
+            0 => "",
+            1 => "X",
+            2 => "XX",
+            3 => "XXX",
+            4 => "XL",
+            _ => unreachable!(),
+        };
+        let five_years = remaining_years.div_euclid(5);
+        remaining_years -= five_years * 5;
+        let five_years = match five_years {
+            0 => "",
+            1 => "V",
+            _ => unreachable!(),
+        };
+        let one_year = remaining_years;
+        let one_year = match one_year {
+            0 => "",
+            1 => "I",
+            2 => "II",
+            3 => "III",
+            4 => "IV",
+            _ => unreachable!(),
+        };
+
+        write!(
+            f,
+            "{} {} {} an {}{}{}{}{}{}{}",
+            self.weekday_name(),
+            self.day(),
+            self.month_name(),
+            thousand_years, five_hundred_years, hundred_years, fifty_years, ten_years, five_years, one_year
+        )
+    }
+
+    fn to_string_default(&self) -> String {
+        let mut s = Vec::new();
+        self.fmt_default(&mut s).unwrap();
+        String::from_utf8(s).unwrap()
+    }
+
+    fn to_string_traditional(&self) -> String {
+        let mut s = Vec::new();
+        self.fmt_traditional(&mut s).unwrap();
+        String::from_utf8(s).unwrap()
+    }
 }
 
 #[cfg(test)]
@@ -282,5 +371,12 @@ mod tests {
         assert_eq!(datetime.day0(), 5); // Jour de la révolution
         assert_eq!(datetime.weekday_name(), "Jour de la Révolution");
         assert_eq!(datetime.day(), 6);
+    }
+
+    #[test]
+    fn test_fmt() {
+        let datetime = DateTime::from_timestamp(Timestamp { seconds: 0 });
+        assert_eq!(datetime.to_string_default(), "Primidi 1 Vendémiaire 1");
+        assert_eq!(datetime.to_string_traditional(), "Primidi 1 Vendémiaire an I");
     }
 }
