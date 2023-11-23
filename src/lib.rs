@@ -1,9 +1,11 @@
 pub mod datetime;
 pub mod timestamp;
 pub mod date;
+pub mod day;
 pub use datetime::*;
 pub use timestamp::*;
 pub use date::*;
+pub use day::*;
 pub mod equinoxes;
 pub use equinoxes::*;
 pub mod years;
