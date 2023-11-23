@@ -149,6 +149,12 @@ impl DateTime {
     pub fn week(&self) -> i64 {
         self.week0() + 1
     }
+
+    fn seconds_in_week(&self) -> i64 {
+        let seconds_in_month = self.seconds_in_month();
+        let seconds_in_week = seconds_in_month - self.week0() * SECONDS_PER_WEEK;
+        seconds_in_week
+    }
 }
 
 #[cfg(test)]
