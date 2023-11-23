@@ -1,5 +1,9 @@
 [package]
 name = "calendrier"
+description = "Crate for handling dates in the french Revolutionary calendar"
+authors = ["Mubelotix <mubelotix@gmail.com>"]
+license = "MIT"
+readme = "README.md"
 version = "0.1.0"
 edition = "2021"
 
