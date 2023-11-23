@@ -64,6 +64,20 @@ impl DateTime {
     pub fn month(&self) -> i64 {
         self.month0() + 1
     }
+
+    /// Returns the day of the month but starting from 0.
+    pub fn day0(&self) -> i64 {
+        let year0 = self.year0();
+        let month0 = self.month0();
+        let seconds_in_month = self.timestamp.seconds - year0 * SECONDS_PER_YEAR - month0 * SECONDS_PER_MONTH;
+        let day = seconds_in_month.div_euclid(SECONDS_PER_DAY);
+        day
+    }
+
+    /// Returns the day of the month, starting from 1.
+    pub fn day(&self) -> i64 {
+        self.day0() + 1
+    }
 }
 
 #[cfg(test)]
