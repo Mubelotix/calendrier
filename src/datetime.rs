@@ -2,43 +2,92 @@ use crate::*;
 
 const SECONDS_PER_DAY: i64 = 100000;
 const DAYS_PER_MONTH: i64 = 30;
-const DAYS_PER_WEEK: i64 = 10;
-const SECONDS_PER_WEEK: i64 = SECONDS_PER_DAY*DAYS_PER_WEEK;
+const DAYS_PER_DECADE: i64 = 10;
 const SECONDS_PER_MONTH: i64 = SECONDS_PER_DAY*DAYS_PER_MONTH;
-const SECONDS_PER_YEAR: i64 = 365*SECONDS_PER_DAY;
-const SECONDS_PER_FRANCIADE: i64 = SECONDS_PER_YEAR*4 + SECONDS_PER_DAY;
 
 pub struct DateTime {
-    timestamp: Timestamp,
+    year0: i64,
+    month0: i64,
+    day0: i64,
+    hour: i64,
+    minute: i64,
+    second: i64,
 }
 
 impl DateTime {
     pub fn from_timestamp(timestamp: Timestamp) -> Self {
+        let year0 = ts_to_year0(timestamp.seconds);
+        let seconds_in_year = timestamp.seconds - get_year_start0(year0);
+
+        let month0 = seconds_in_year.div_euclid(SECONDS_PER_MONTH);
+        let seconds_in_month = seconds_in_year.rem_euclid(SECONDS_PER_MONTH);
+
+        let day0 = seconds_in_month.div_euclid(SECONDS_PER_DAY);
+        let seconds_in_day = seconds_in_month.rem_euclid(SECONDS_PER_DAY);
+
+        let hour = seconds_in_day.div_euclid(10000);
+        let seconds_in_hour = seconds_in_day.rem_euclid(1000);
+
+        let minute = seconds_in_hour.div_euclid(100);
+        let second = seconds_in_hour.rem_euclid(100);
+
         Self {
-            timestamp,
+            year0,
+            month0,
+            day0,
+            hour,
+            minute,
+            second,
         }
     }
 
     pub fn from_ymd_hms(year: i64, month: i64, day: i64, hour: i64, minute: i64, second: i64) -> Self {
-        let seconds = year * SECONDS_PER_YEAR + month * SECONDS_PER_MONTH + day * SECONDS_PER_DAY + hour * 10000 + minute * 100 + second;
+        let year0 = match year > 0 {
+            true => year - 1,
+            false => year
+        };
+        let month0 = month - 1;
+        let day0 = day - 1;
         Self {
-            timestamp: Timestamp {
-                seconds,
-            },
+            year0,
+            month0,
+            day0,
+            hour,
+            minute,
+            second,
         }
+    }
+
+    pub fn from_ymd_hms0(year0: i64, month0: i64, day0: i64, hour: i64, minute: i64, second: i64) -> Self {
+        Self {
+            year0,
+            month0,
+            day0,
+            hour,
+            minute,
+            second,
+        }
+    }
+
+    pub fn from_ymd(year: i64, month: i64, day: i64) -> Self {
+        Self::from_ymd_hms(year, month, day, 0, 0, 0)
+    }
+
+    pub fn from_ymd0(year0: i64, month0: i64, day0: i64) -> Self {
+        Self::from_ymd_hms0(year0, month0, day0, 0, 0, 0)
     }
 
     /// Returns the franciade but starting from 0.
     /// A franciade is a period of 4 years.
     pub fn franciade0(&self) -> i64 {
-        self.timestamp.seconds.div_euclid(SECONDS_PER_FRANCIADE)
+        ((self.year0 + 2) / 4) - 1
     }
 
     /// Returns the franciade but starting from 1.
     /// There is no franciade 0.
     pub fn franciade(&self) -> i64 {
         let franciade0 = self.franciade0();
-        match franciade0 >= 0 {
+        match franciade0 > 0 {
             true => franciade0 + 1,
             false => franciade0,
         }
@@ -46,26 +95,21 @@ impl DateTime {
 
     /// Returns the year but starting from 0.
     pub fn year0(&self) -> i64 {
-        ts_to_year0(self.timestamp.seconds)
+        self.year0
     }
 
     /// Returns the year but starting from 1.
     pub fn year(&self) -> i64 {
-        ts_to_year(self.timestamp.seconds)
-    }
-
-    fn seconds_in_year(&self) -> i64 {
-        let year0 = self.year0();
-        let seconds_in_year = self.timestamp.seconds - get_year_start0(year0);
-        seconds_in_year
+        match self.year0 > 0 {
+            true => self.year0 + 1,
+            false => self.year0,
+        }
     }
 
     /// Returns the month but starting from 0.
     /// A 13th month of 5 or 6 days is added at the end of the year.
     pub fn month0(&self) -> i64 {
-        let seconds_in_year = self.seconds_in_year();
-        let month = seconds_in_year.div_euclid(SECONDS_PER_MONTH);
-        month
+        self.month0
     }
 
     /// Returns the month name, starting with a capital letter.
@@ -116,17 +160,9 @@ impl DateTime {
         self.month0() + 1
     }
 
-    fn seconds_in_month(&self) -> i64 {
-        let seconds_in_year = self.seconds_in_year();
-        let seconds_in_month = seconds_in_year - self.month0() * SECONDS_PER_MONTH;
-        seconds_in_month
-    }
-
     /// Returns the day of the month but starting from 0.
     pub fn day0(&self) -> i64 {
-        let seconds_in_month = self.seconds_in_month();
-        let day = seconds_in_month.div_euclid(SECONDS_PER_DAY);
-        day
+        self.day0
     }
 
     /// Returns the day of the month, starting from 1.
@@ -134,29 +170,19 @@ impl DateTime {
         self.day0() + 1
     }
 
-    /// Returns the week but starting from 0.
-    pub fn week0(&self) -> i64 {
-        let seconds_in_month = self.seconds_in_month();
-        let week = seconds_in_month.div_euclid(SECONDS_PER_WEEK);
-        week
+    /// Returns the decade but starting from 0.
+    pub fn decade0(&self) -> i64 {
+        self.day0().div_euclid(DAYS_PER_DECADE)
     }
 
-    /// Returns the week, starting from 1.
-    pub fn week(&self) -> i64 {
-        self.week0() + 1
-    }
-
-    fn seconds_in_week(&self) -> i64 {
-        let seconds_in_month = self.seconds_in_month();
-        let seconds_in_week = seconds_in_month - self.week0() * SECONDS_PER_WEEK;
-        seconds_in_week
+    /// Returns the decade, starting from 1.
+    pub fn decade(&self) -> i64 {
+        self.decade0() + 1
     }
 
     /// Returns the day of the week but starting from 0.
     pub fn weekday0(&self) -> i64 {
-        let seconds_in_week = self.seconds_in_week();
-        let weekday = seconds_in_week.div_euclid(SECONDS_PER_DAY);
-        weekday
+        self.day0().rem_euclid(DAYS_PER_DECADE)
     }
 
     /// Returns the day of the week, starting from 1.
@@ -220,6 +246,22 @@ impl DateTime {
             9 => "décadi",
             _ => unreachable!(),
         }
+    }
+
+    pub fn hour(&self) -> i64 {
+        self.hour
+    }
+
+    pub fn minute(&self) -> i64 {
+        self.minute
+    }
+
+    pub fn second(&self) -> i64 {
+        self.second
+    }
+
+    pub fn hms(&self) -> (i64, i64, i64) {
+        (self.hour, self.minute, self.second)
     }
 
     fn fmt_default(&self, f: &mut impl std::io::Write) -> std::io::Result<()> {
@@ -315,6 +357,7 @@ impl DateTime {
 #[cfg(test)]
 mod tests {
     use super::*;
+    const SECONDS_PER_YEAR: i64 = 365*SECONDS_PER_DAY;
 
     #[test]
     fn test_franciade() {

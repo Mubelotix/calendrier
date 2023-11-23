@@ -25,4 +25,10 @@ impl Timestamp {
             seconds: republican_seconds,
         }
     }
+
+    pub fn to_unix(&self) -> i64 {
+        let gregorian_seconds = self.seconds * GREGORIAN_SECONDS_PER_DAY / REPUBLICAN_SECONDS_PER_DAY;
+        let unix_timestamp = gregorian_seconds + REPUBLICAN_EPOCH_GREGORIAN_SECONDS;
+        unix_timestamp
+    }
 }

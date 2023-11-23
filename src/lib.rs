@@ -6,3 +6,5 @@ pub mod equinoxes;
 pub use equinoxes::*;
 pub mod years;
 pub use years::*;
+#[cfg(feature = "chrono")]
+pub mod chrono_compat;
