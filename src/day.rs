@@ -60,7 +60,7 @@ impl RegularDay {
     }
 
     /// Returns identifier from 1 to 10
-    pub const fn num(&self) -> u8 {
+    pub const fn num(&self) -> i64 {
         match self {
             Self::Primedi => 1,
             Self::Duodi => 2,
@@ -76,8 +76,34 @@ impl RegularDay {
     }
 
     /// Returns identifier from 0 to 9
-    pub const fn num0(&self) -> u8 {
+    pub const fn num0(&self) -> i64 {
         self.num() - 1
+    }
+
+    /// # Panics
+    /// 
+    /// Panics if `num0` is greater than 9.
+    pub fn from_num0(num0: i64) -> Self {
+        match num0 {
+            0 => Self::Primedi,
+            1 => Self::Duodi,
+            2 => Self::Tridi,
+            3 => Self::Quartidi,
+            4 => Self::Quintidi,
+            5 => Self::Sextidi,
+            6 => Self::Septidi,
+            7 => Self::Octidi,
+            8 => Self::Nonidi,
+            9 => Self::Décadi,
+            _ => panic!("Invalid regular day number: {}", num0),
+        }
+    }
+
+    /// # Panics
+    /// 
+    /// Panics if `num` is greater than 10 or less than 1.
+    pub fn from_num(num: i64) -> Self {
+        Self::from_num0(num - 1)
     }
 }
 
@@ -111,7 +137,7 @@ impl SansculottideDay {
     }
 
     /// Returns identifier from 1 to 6
-    pub const fn num(&self) -> u8 {
+    pub const fn num(&self) -> i64 {
         match self {
             Self::Vertu => 1,
             Self::Génie => 2,
@@ -123,8 +149,30 @@ impl SansculottideDay {
     }
 
     /// Returns identifier from 0 to 5
-    pub const fn num0(&self) -> u8 {
+    pub const fn num0(&self) -> i64 {
         self.num() - 1
+    }
+
+    /// # Panics
+    /// 
+    /// Panics if `num0` is greater than 5.
+    pub fn from_num0(num0: i64) -> Self {
+        match num0 {
+            0 => Self::Vertu,
+            1 => Self::Génie,
+            2 => Self::Travail,
+            3 => Self::Opinion,
+            4 => Self::Récompenses,
+            5 => Self::Révolution,
+            _ => panic!("Invalid Sansculottide day number: {}", num0),
+        }
+    }
+
+    /// # Panics
+    /// 
+    /// Panics if `num` is greater than 6 or less than 1.
+    pub fn from_num(num: i64) -> Self {
+        Self::from_num0(num - 1)
     }
 }
 
@@ -150,7 +198,7 @@ impl Day {
     }
 
     /// Returns identifier from 1 to 10
-    pub const fn num(&self) -> u8 {
+    pub const fn num(&self) -> i64 {
         match self {
             Self::Regular(day) => day.num(),
             Self::Sansculottide(day) => day.num(),
@@ -158,7 +206,7 @@ impl Day {
     }
 
     /// Returns identifier from 0 to 9
-    pub const fn num0(&self) -> u8 {
+    pub const fn num0(&self) -> i64 {
         match self {
             Self::Regular(day) => day.num0(),
             Self::Sansculottide(day) => day.num0(),

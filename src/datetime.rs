@@ -175,71 +175,21 @@ impl DateTime {
         self.decade0() + 1
     }
 
-    /// Returns the day of the week but starting from 0.
-    pub fn weekday0(&self) -> i64 {
+    /// Returns the day of the decade, starting from 0.
+    pub fn num_decade_day0(&self) -> i64 {
         self.day0().rem_euclid(DAYS_PER_DECADE)
     }
 
-    /// Returns the day of the week, starting from 1.
-    pub fn weekday(&self) -> i64 {
-        self.weekday0() + 1
+    /// Returns the day of the decade, starting from 1.
+    pub fn num_decade_day(&self) -> i64 {
+        self.num_decade_day0() + 1
     }
 
-    /// Returns the day of the week name, starting with a capital letter.
-    pub fn weekday_name(&self) -> &'static str {
-        if self.month0() == 12 {
-            return match self.day0() {
-                0 => "Jour de la vertu",
-                1 => "Jour du génie",
-                2 => "Jour du travail",
-                3 => "Jour de l'opinion",
-                4 => "Jour des récompenses",
-                5 => "Jour de la Révolution",
-                _ => unreachable!(),
-            }
-        }
-        let weekday0 = self.weekday0();
-        match weekday0 {
-            0 => "Primidi",
-            1 => "Duodi",
-            2 => "Tridi",
-            3 => "Quartidi",
-            4 => "Quintidi",
-            5 => "Sextidi",
-            6 => "Septidi",
-            7 => "Octidi",
-            8 => "Nonidi",
-            9 => "Décadi",
-            _ => unreachable!(),
-        }
-    }
-
-    /// Returns the day of the week name, all lowercase (except Révolution)
-    pub fn weekday_name_lc(&self) -> &'static str {
-        if self.month0() == 12 {
-            return match self.day0() {
-                0 => "jour de la vertu",
-                1 => "jour du génie",
-                2 => "jour du travail",
-                3 => "jour de l'opinion",
-                4 => "jour des récompenses",
-                5 => "jour de la Révolution",
-                _ => unreachable!(),
-            }
-        }
-        let weekday0 = self.weekday0();
-        match weekday0 {
-            0 => "primidi",
-            1 => "duodi",
-            2 => "tridi",
-            3 => "quartidi",
-            4 => "quintidi",
-            5 => "sextidi",
-            6 => "septidi",
-            7 => "octidi",
-            8 => "nonidi",
-            9 => "décadi",
-            _ => unreachable!(),
+    pub fn decade_day(&self) -> Day {
+        if self.month0 == 12 {
+            Day::Sansculottide(SansculottideDay::from_num0(self.num_decade_day0()))
+        } else {
+            Day::Regular(RegularDay::from_num0(self.num_decade_day0()))
         }
     }
 
