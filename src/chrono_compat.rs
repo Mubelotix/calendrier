@@ -1,3 +1,4 @@
+use std::ops::{Add, AddAssign};
 use crate::*;
 
 impl<Tz: chrono::TimeZone> From<chrono::DateTime<Tz>> for DateTime {
@@ -59,5 +60,37 @@ impl TryFrom<chrono::NaiveDate> for Date {
             None => return Err(()),
         };
         Ok(Self::from_timestamp(Timestamp::from_unix(ts)))
+    }
+}
+
+impl Add<chrono::Duration> for DateTime {
+    type Output = Self;
+
+    fn add(self, rhs: chrono::Duration) -> Self::Output {
+        let seconds = self.timestamp().seconds + rhs.num_seconds() * REPUBLICAN_SECONDS_PER_DAY / GREGORIAN_SECONDS_PER_DAY;
+        Self::from_timestamp(Timestamp { seconds: seconds })
+    }
+}
+
+impl Add<chrono::Duration> for Date {
+    type Output = Self;
+
+    fn add(self, rhs: chrono::Duration) -> Self::Output {
+        let seconds = self.timestamp().seconds + rhs.num_seconds() * REPUBLICAN_SECONDS_PER_DAY / GREGORIAN_SECONDS_PER_DAY;
+        Self::from_timestamp(Timestamp { seconds })
+    }
+}
+
+impl AddAssign<chrono::Duration> for DateTime {
+    fn add_assign(&mut self, rhs: chrono::Duration) {
+        let ts = self.timestamp().seconds + rhs.num_seconds() * REPUBLICAN_SECONDS_PER_DAY / GREGORIAN_SECONDS_PER_DAY;
+        *self = Self::from_timestamp(Timestamp { seconds: ts });
+    }
+}
+
+impl AddAssign<chrono::Duration> for Date {
+    fn add_assign(&mut self, rhs: chrono::Duration) {
+        let ts = self.timestamp().seconds + rhs.num_seconds() * REPUBLICAN_SECONDS_PER_DAY / GREGORIAN_SECONDS_PER_DAY;
+        *self = Self::from_timestamp(Timestamp { seconds: ts });
     }
 }

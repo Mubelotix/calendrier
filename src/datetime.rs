@@ -21,7 +21,7 @@ impl DateTime {
         let seconds_in_day = seconds_in_month.rem_euclid(SECONDS_PER_DAY);
 
         let hour = seconds_in_day.div_euclid(10000);
-        let seconds_in_hour = seconds_in_day.rem_euclid(1000);
+        let seconds_in_hour = seconds_in_day.rem_euclid(10000);
 
         let minute = seconds_in_hour.div_euclid(100);
         let second = seconds_in_hour.rem_euclid(100);
