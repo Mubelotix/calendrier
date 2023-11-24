@@ -10,6 +10,22 @@ The equinoxe dates [were collected and computed](https://www.imcce.fr/newsletter
 
 A time shift of around 15 minutes is applied to match the ancient time reference.
 
+## Usage
+
+```rust
+use calendrier::*;
+
+let date = DateTime::from_ymd(1, 1, 1); // Calendar starts on september 22nd, 1792
+let date_fmt = date.to_string();
+assert_eq!(date_fmt.as_str(), "1 Vendémiaire 1");
+
+let ts = date.timestamp(); // Convert to timestamp, number of seconds since republican epoch
+assert_eq!(ts, Timestamp { seconds: 0 }); // Timestamps are encapsulated in a struct so that you don't confuse them with unix timestamps
+
+let ts_unix = ts.to_unix(); // Convert to unix timestamp
+assert_eq!(ts_unix, -5594228280);
+```
+
 ## Calendar specification
 
 > Article premier.
