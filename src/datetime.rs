@@ -111,14 +111,20 @@ impl DateTime {
         Self::from_ymd_hms0(year0, month0, day0, 0, 0, 0)
     }
 
-    /// Returns the franciade but starting from 0.
-    /// A franciade is a period of 4 years.
+    /// Returns the franciade number starting from 0.
+    /// 
+    /// A franciade is defined as 4 years, the first franciade ending in year 3.
+    /// It is *not* defined as a period of years ending with a sextile year.
+    /// Not all franciades are `365*4+1` days long.
     pub fn franciade0(&self) -> i64 {
         ((self.year0 + 2) / 4) - 1
     }
 
-    /// Returns the franciade but starting from 1.
-    /// There is no franciade 0.
+    /// Returns the franciade number starting from 0.
+    /// 
+    /// A franciade is defined as 4 years, the first franciade ending in year 3.
+    /// It is *not* defined as a period of years ending with a sextile year.
+    /// Not all franciades are `365*4+1` days long.
     pub fn franciade(&self) -> i64 {
         let franciade0 = self.franciade0();
         match franciade0 > 0 {
