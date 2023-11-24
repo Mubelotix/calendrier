@@ -23,11 +23,20 @@ impl Date {
         }
     }
 
+    /// # Panics
+    /// 
+    /// Panics if:
+    /// - year is 0,
+    /// - month is not in [1, 13],
+    /// - day is not in [1, 30].
     pub fn from_ymd(year: i64, month: i64, day: i64) -> Self {
-        let year0 = match year > 0 {
-            true => year - 1,
-            false => year
+        let year0 = match year.cmp(&0) {
+            std::cmp::Ordering::Greater => year - 1,
+            std::cmp::Ordering::Less => year,
+            std::cmp::Ordering::Equal => panic!("year cannot be 0"),
         };
+        assert!((1..=13).contains(&month), "month must be in [1, 13]");
+        assert!((1..=30).contains(&day), "day must be in [1, 30]");
         let month0 = month - 1;
         let day0 = day - 1;
         Self {
@@ -37,7 +46,14 @@ impl Date {
         }
     }
 
+    /// # Panics
+    /// 
+    /// Panics if:
+    /// - month is not in [0, 12],
+    /// - day is not in [0, 29].
     pub fn from_ymd0(year0: i64, month0: i64, day0: i64) -> Self {
+        assert!((0..=12).contains(&month0), "month0 must be in [0, 12]");
+        assert!((0..=29).contains(&day0), "day0 must be in [0, 29]");
         Self {
             year0,
             month0,
