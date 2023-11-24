@@ -70,7 +70,7 @@ impl Date {
         ((self.year0 + 2) / 4) - 1
     }
 
-    /// Returns the franciade number starting from 0.
+    /// Returns the franciade number starting from 1.
     /// 
     /// A franciade is defined as 4 years, the first franciade ending in year 3.
     /// It is *not* defined as a period of years ending with a sextile year.
