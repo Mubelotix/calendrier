@@ -98,56 +98,19 @@ impl Date {
 
     /// Returns the month but starting from 0.
     /// A 13th month of 5 or 6 days is added at the end of the year.
-    pub fn month0(&self) -> i64 {
+    pub fn num_month0(&self) -> i64 {
         self.month0
-    }
-
-    /// Returns the month name, starting with a capital letter.
-    pub fn month_name(&self) -> &'static str {
-        let month0 = self.month0();
-        match month0 {
-            0 => "Vendémiaire",
-            1 => "Brumaire",
-            2 => "Frimaire",
-            3 => "Nivôse",
-            4 => "Pluviôse",
-            5 => "Ventôse",
-            6 => "Germinal",
-            7 => "Floréal",
-            8 => "Prairial",
-            9 => "Messidor",
-            10 => "Thermidor",
-            11 => "Fructidor",
-            12 => "Sansculotides",
-            _ => unreachable!(),
-        }
-    }
-
-    /// Returns the month name, all lowercase.
-    pub fn month_name_lc(&self) -> &'static str {
-        let month0 = self.month0();
-        match month0 {
-            0 => "vendémiaire",
-            1 => "brumaire",
-            2 => "frimaire",
-            3 => "nivôse",
-            4 => "pluviôse",
-            5 => "ventôse",
-            6 => "germinal",
-            7 => "floréal",
-            8 => "prairial",
-            9 => "messidor",
-            10 => "thermidor",
-            11 => "fructidor",
-            12 => "sansculotides",
-            _ => unreachable!(),
-        }
     }
 
     /// Returns the month, starting from 1.
     /// A 13th month of 5 or 6 days is added at the end of the year.
-    pub fn month(&self) -> i64 {
-        self.month0() + 1
+    pub fn num_month(&self) -> i64 {
+        self.num_month0() + 1
+    }
+
+    /// Returns the month.
+    pub fn month(&self) -> Month {
+        Month::from_num0(self.month0)
     }
 
     /// Returns the day of the month but starting from 0.
@@ -201,7 +164,7 @@ impl Date {
             "{} {} {} {}",
             self.decade_day(),
             self.day(),
-            self.month_name(),
+            self.month(),
             self.year(),
         )
     }
@@ -267,7 +230,7 @@ impl Date {
             "{} {} {} an {}{}{}{}{}{}{}",
             self.decade_day(),
             self.day(),
-            self.month_name(),
+            self.month(),
             thousand_years, five_hundred_years, hundred_years, fifty_years, ten_years, five_years, one_year
         )
     }
