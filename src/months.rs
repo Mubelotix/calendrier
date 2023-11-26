@@ -75,4 +75,33 @@ impl Month {
     pub fn num(&self) -> i64 {
         self.num0() + 1
     }
+
+    /// # Panics
+    /// 
+    /// Panics if `num0` is greater than 12.
+    pub fn from_num0(num0: i64) -> Self {
+        match num0 {
+            0 => Month::Vendémiaire,
+            1 => Month::Brumaire,
+            2 => Month::Frimaire,
+            3 => Month::Nivôse,
+            4 => Month::Pluviôse,
+            5 => Month::Ventôse,
+            6 => Month::Germinal,
+            7 => Month::Floréal,
+            8 => Month::Prairial,
+            9 => Month::Messidor,
+            10 => Month::Thermidor,
+            11 => Month::Fructidor,
+            12 => Month::Sansculotides,
+            _ => panic!("Invalid month number: {}", num0)
+        }
+    }
+
+    /// # Panics
+    /// 
+    /// Panics if `num` is greater than 11.
+    pub fn from_num(num: i64) -> Self {
+        Self::from_num0(num - 1)
+    }
 }
