@@ -1,5 +1,6 @@
 use crate::*;
 
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Date {
     year0: i64,
     month0: i64,

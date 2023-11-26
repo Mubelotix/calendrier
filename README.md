@@ -8,7 +8,7 @@ Outside of this range, years will begin to shift by one day every few years.
 
 The equinoxe dates [were collected and computed](https://www.imcce.fr/newsletter/docs/Equinoxe_printemps_1583_2999.pdf) by the Observatoire de Paris.
 
-A time shift of around 15 minutes is applied to match the ancient time reference.
+A time offset of 18 minutes is applied to correct the slow shift of the measure of time since the 18th century.
 
 ## Usage
 
@@ -112,5 +112,7 @@ assert_eq!(ts_unix, -5594228280);
 > XVI.
 > Tous les quatre ans, ou toutes les franciades, au jour de la révolution, il sera célébré des jeux républicains, en mémoire de la révolution française.
 
-The contradiction between article III and IX is resolved by prioritizing article III.
+The contradiction between article III and IX is resolved by prioritizing article III, as decided in year 79 by the Commune de Paris.
 Indeed, a year isn't exactly 365.25 days long, so Franciades will not always be 365*4+1 days long.
+
+Also as a reminder: Romme's WIP reform was never adopted. It wasn't a good idea anyway. This crate will never implement the reform.
