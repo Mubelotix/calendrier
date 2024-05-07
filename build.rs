@@ -8,8 +8,7 @@ const REPUBLICAN_SECONDS_PER_DAY: i64 = 100000;
 const GREGORIAN_SECONDS_PER_DAY: i64 = 86400;
 pub fn ts_from_unix(unix_timestamp: i64) -> i64 {
     let gregorian_seconds = unix_timestamp - REPUBLICAN_EPOCH_GREGORIAN_SECONDS;
-    let republican_seconds = gregorian_seconds * REPUBLICAN_SECONDS_PER_DAY / GREGORIAN_SECONDS_PER_DAY;
-    republican_seconds
+    gregorian_seconds * REPUBLICAN_SECONDS_PER_DAY / GREGORIAN_SECONDS_PER_DAY
 }
 
 fn main() {
@@ -52,7 +51,7 @@ fn main() {
             true => republican_year0 + 1,
             false => republican_year0
         };
-        let ts = equinoxes.get(&republican_year).expect(&format!("Could not find equinox for year {republican_year} (gregorian {gregorian_year})"));
+        let ts = equinoxes.get(&republican_year).unwrap_or_else(|| panic!("Could not find equinox for year {republican_year} (gregorian {gregorian_year})"));
         code = code.replace("EQUINOX,", format!("{ts}, EQUINOX,").as_str());
     }
     code = code.replace("EQUINOX,", "");
@@ -66,14 +65,14 @@ fn main() {
             true => republican_year0 + 1,
             false => republican_year0
         };
-        let ts = equinoxes.get(&republican_year).expect(&format!("Could not find equinox for year {republican_year} (gregorian {gregorian_year})"));
+        let ts = equinoxes.get(&republican_year).unwrap_or_else(|| panic!("Could not find equinox for year {republican_year} (gregorian {gregorian_year})"));
         let day_start = ts - ts.rem_euclid(REPUBLICAN_SECONDS_PER_DAY);
         year_starts.insert(gregorian_year, day_start);
         code = code.replace("YEAR_START,", format!("{day_start}, YEAR_START,").as_str());
     }
     for gregorian_year in 1583..2999 {
-        let year_start = year_starts.get(&gregorian_year).expect(&format!("Could not find year (greg {gregorian_year})"));
-        let next_year_start = year_starts.get(&(gregorian_year + 1)).expect(&format!("Could not find year (greg {gregorian_year}+1)"));
+        let year_start = year_starts.get(&gregorian_year).unwrap_or_else(|| panic!("Could not find year (greg {gregorian_year})"));
+        let next_year_start = year_starts.get(&(gregorian_year + 1)).unwrap_or_else(|| panic!("Could not find year (greg {gregorian_year}+1)"));
         let day_count = (next_year_start - year_start) / REPUBLICAN_SECONDS_PER_DAY;
         code = code.replace("DAY_COUNT,", format!("{day_count}, DAY_COUNT,").as_str());
     }
