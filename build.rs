@@ -35,9 +35,10 @@ fn main() {
         let ts = ts_from_unix(datetime.timestamp());
 
         let republican_year0 = gregorian_year - 1792;
-        let republican_year = match republican_year0 >= 0 {
-            true => republican_year0 + 1,
-            false => republican_year0
+        let republican_year = if republican_year0 >= 0 {
+            republican_year0 + 1
+        } else {
+            republican_year0
         };
 
         equinoxes.insert(republican_year, ts);
@@ -47,9 +48,10 @@ fn main() {
     let mut code = std::fs::read_to_string("src/equinoxes_pattern.rs").expect("Could not read src/equinoxes_pattern.rs");
     for gregorian_year in 1583..=2999 {
         let republican_year0 = gregorian_year - 1792;
-        let republican_year = match republican_year0 >= 0 {
-            true => republican_year0 + 1,
-            false => republican_year0
+        let republican_year = if republican_year0 >= 0 {
+            republican_year0 + 1
+        } else {
+            republican_year0
         };
         let ts = equinoxes.get(&republican_year).unwrap_or_else(|| panic!("Could not find equinox for year {republican_year} (gregorian {gregorian_year})"));
         code = code.replace("EQUINOX,", format!("{ts}, EQUINOX,").as_str());
@@ -61,9 +63,10 @@ fn main() {
     let mut code = std::fs::read_to_string("src/years_pattern.rs").expect("Could not read src/years_pattern.rs");
     for gregorian_year in 1583..=2999 {
         let republican_year0 = gregorian_year - 1792;
-        let republican_year = match republican_year0 >= 0 {
-            true => republican_year0 + 1,
-            false => republican_year0
+        let republican_year = if republican_year0 >= 0 {
+            republican_year0 + 1
+        } else {
+            republican_year0
         };
         let ts = equinoxes.get(&republican_year).unwrap_or_else(|| panic!("Could not find equinox for year {republican_year} (gregorian {gregorian_year})"));
         let day_start = ts - ts.rem_euclid(REPUBLICAN_SECONDS_PER_DAY);
