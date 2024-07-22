@@ -77,7 +77,11 @@ mod tests {
     fn hour_converter() {
         let hours = vec![(8,0,0), (9,45,0), (11,30,0), (13,15,0), (15,0,0), (16,45,0), (18,30,0)];
         for hour in hours {
-            let date: chrono::NaiveDateTime = chrono::NaiveDate::from_ymd(1, 1, 1).and_hms(hour.0, hour.1, hour.2);
+            let date: chrono::NaiveDateTime =
+                chrono::NaiveDate::from_ymd_opt(1, 1, 1)
+                    .expect("Incorrect date")
+                    .and_hms_opt(hour.0, hour.1, hour.2)
+                    .expect("Incorrect time");
             let republican: DateTime = date.try_into().unwrap();
             println!("{}h{} {}s -> {}h{} {}s", hour.0, hour.1, hour.2, republican.hour(), republican.minute(), republican.second());
         }
