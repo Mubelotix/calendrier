@@ -124,7 +124,7 @@ fn test_year_start() {
             "year {}", year
         );
         previous_year_start = year_start;
-    }   
+    }
     let mut next_year_start = get_year_start(-1);
     for year in (-10000..=-2).rev() {
         let year_start = get_year_start(year);

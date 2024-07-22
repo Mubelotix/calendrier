@@ -340,7 +340,7 @@ mod tests {
         let datetime = DateTime::from_timestamp(Timestamp { seconds: 0 });
         assert_eq!(datetime.year0(), 0);
         assert_eq!(datetime.year(), 1);
-        
+
         let datetime = DateTime::from_timestamp(Timestamp { seconds: -1 });
         assert_eq!(datetime.year0(), -1);
         assert_eq!(datetime.year(), -1);
@@ -355,7 +355,7 @@ mod tests {
         let datetime = DateTime::from_timestamp(Timestamp { seconds: 0 });
         assert_eq!(datetime.num_month0(), 0);
         assert_eq!(datetime.month(), Month::Vendémiaire);
-        
+
         let datetime = DateTime::from_timestamp(Timestamp { seconds: -1 });
         assert_eq!(datetime.num_month0(), 12);
         assert_eq!(datetime.month(), Month::Sansculotides);
@@ -366,7 +366,7 @@ mod tests {
         let datetime = DateTime::from_timestamp(Timestamp { seconds: 0 });
         assert_eq!(datetime.day0(), 0);
         assert_eq!(datetime.day(), 1);
-        
+
         let datetime = DateTime::from_timestamp(Timestamp { seconds: get_year_start(4)-1 });
         assert_eq!(datetime.day0(), 5); // Jour de la révolution
         assert_eq!(datetime.decade_day().name(), "Jour de la Révolution");
