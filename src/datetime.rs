@@ -38,7 +38,7 @@ impl DateTime {
     }
 
     /// # Panics
-    /// 
+    ///
     /// Panics if:
     /// - year is 0,
     /// - month is not in [1, 13],
@@ -46,7 +46,14 @@ impl DateTime {
     /// - hour is not in [0, 9],
     /// - minute is not in [0, 99],
     /// - second is not in [0, 99].
-    pub fn from_ymd_hms(year: i64, month: i64, day: i64, hour: i64, minute: i64, second: i64) -> Self {
+    pub fn from_ymd_hms(
+        year: i64,
+        month: i64,
+        day: i64,
+        hour: i64,
+        minute: i64,
+        second: i64,
+    ) -> Self {
         let year0 = match year.cmp(&0) {
             std::cmp::Ordering::Greater => year - 1,
             std::cmp::Ordering::Less => year,
@@ -70,14 +77,21 @@ impl DateTime {
     }
 
     /// # Panics
-    /// 
+    ///
     /// Panics if:
     /// - month is not in [0, 12],
     /// - day is not in [0, 29],
     /// - hour is not in [0, 9],
     /// - minute is not in [0, 99],
     /// - second is not in [0, 99].
-    pub fn from_ymd_hms0(year0: i64, month0: i64, day0: i64, hour: i64, minute: i64, second: i64) -> Self {
+    pub fn from_ymd_hms0(
+        year0: i64,
+        month0: i64,
+        day0: i64,
+        hour: i64,
+        minute: i64,
+        second: i64,
+    ) -> Self {
         assert!((0..=12).contains(&month0), "month must be in [0, 12]");
         assert!((0..=29).contains(&day0), "day must be in [0, 29]");
         assert!((0..=9).contains(&hour), "hour must be in [0, 9]");
@@ -94,7 +108,7 @@ impl DateTime {
     }
 
     /// # Panics
-    /// 
+    ///
     /// Panics if:
     /// - year is 0,
     /// - month is not in [1, 13],
@@ -104,7 +118,7 @@ impl DateTime {
     }
 
     /// # Panics
-    /// 
+    ///
     /// Panics if:
     /// - month is not in [0, 12],
     /// - day is not in [0, 29].
@@ -113,7 +127,7 @@ impl DateTime {
     }
 
     /// Returns the franciade number starting from 0.
-    /// 
+    ///
     /// A franciade is defined as 4 years, the first franciade ending in year 3.
     /// It is *not* defined as a period of years ending with a sextile year.
     /// Not all franciades are `365*4+1` days long.
@@ -122,7 +136,7 @@ impl DateTime {
     }
 
     /// Returns the franciade number starting from 1.
-    /// 
+    ///
     /// A franciade is defined as 4 years, the first franciade ending in year 3.
     /// It is *not* defined as a period of years ending with a sextile year.
     /// Not all franciades are `365*4+1` days long.
@@ -223,7 +237,12 @@ impl DateTime {
     /// Returns the timestamp
     pub fn timestamp(&self) -> Timestamp {
         Timestamp {
-            seconds: get_year_start0(self.year0) + self.month0 * SECONDS_PER_MONTH + self.day0 * SECONDS_PER_DAY + self.hour * 10000 + self.minute * 100 + self.second,
+            seconds: get_year_start0(self.year0)
+                + self.month0 * SECONDS_PER_MONTH
+                + self.day0 * SECONDS_PER_DAY
+                + self.hour * 10000
+                + self.minute * 100
+                + self.second,
         }
     }
 
@@ -300,7 +319,13 @@ impl DateTime {
             self.decade_day(),
             self.day(),
             self.month(),
-            thousand_years, five_hundred_years, hundred_years, fifty_years, ten_years, five_years, one_year
+            thousand_years,
+            five_hundred_years,
+            hundred_years,
+            fifty_years,
+            ten_years,
+            five_years,
+            one_year
         )
     }
 
@@ -320,7 +345,7 @@ impl DateTime {
 #[cfg(test)]
 mod tests {
     use super::*;
-    const SECONDS_PER_YEAR: i64 = 365*SECONDS_PER_DAY;
+    const SECONDS_PER_YEAR: i64 = 365 * SECONDS_PER_DAY;
 
     #[test]
     fn test_franciade() {
@@ -332,7 +357,9 @@ mod tests {
         assert_eq!(datetime.franciade0(), -1);
         assert_eq!(datetime.franciade(), -1);
 
-        let datetime = DateTime::from_timestamp(Timestamp { seconds: SECONDS_PER_YEAR*5 });
+        let datetime = DateTime::from_timestamp(Timestamp {
+            seconds: SECONDS_PER_YEAR * 5,
+        });
         assert_eq!(datetime.franciade0(), 1);
         assert_eq!(datetime.franciade(), 2);
     }
@@ -347,7 +374,9 @@ mod tests {
         assert_eq!(datetime.year0(), -1);
         assert_eq!(datetime.year(), -1);
 
-        let datetime = DateTime::from_timestamp(Timestamp { seconds: -SECONDS_PER_YEAR-SECONDS_PER_DAY-1 });
+        let datetime = DateTime::from_timestamp(Timestamp {
+            seconds: -SECONDS_PER_YEAR - SECONDS_PER_DAY - 1,
+        });
         assert_eq!(datetime.year0(), -2);
         assert_eq!(datetime.year(), -2);
     }
@@ -369,7 +398,9 @@ mod tests {
         assert_eq!(datetime.day0(), 0);
         assert_eq!(datetime.day(), 1);
 
-        let datetime = DateTime::from_timestamp(Timestamp { seconds: get_year_start(4)-1 });
+        let datetime = DateTime::from_timestamp(Timestamp {
+            seconds: get_year_start(4) - 1,
+        });
         assert_eq!(datetime.day0(), 5); // Jour de la révolution
         assert_eq!(datetime.decade_day().name(), "Jour de la Révolution");
         assert_eq!(datetime.day(), 6);
@@ -379,6 +410,9 @@ mod tests {
     fn test_fmt() {
         let datetime = DateTime::from_timestamp(Timestamp { seconds: 0 });
         assert_eq!(datetime.to_string_default(), "Primidi 1 Vendémiaire 1");
-        assert_eq!(datetime.to_string_traditional(), "Primidi 1 Vendémiaire an I");
+        assert_eq!(
+            datetime.to_string_traditional(),
+            "Primidi 1 Vendémiaire an I"
+        );
     }
 }

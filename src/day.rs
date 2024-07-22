@@ -81,7 +81,7 @@ impl RegularDay {
     }
 
     /// # Panics
-    /// 
+    ///
     /// Panics if `num0` is greater than 9.
     pub fn from_num0(num0: i64) -> Self {
         match num0 {
@@ -100,7 +100,7 @@ impl RegularDay {
     }
 
     /// # Panics
-    /// 
+    ///
     /// Panics if `num` is greater than 10 or less than 1.
     pub fn from_num(num: i64) -> Self {
         Self::from_num0(num - 1)
@@ -154,7 +154,7 @@ impl SansculottideDay {
     }
 
     /// # Panics
-    /// 
+    ///
     /// Panics if `num0` is greater than 5.
     pub fn from_num0(num0: i64) -> Self {
         match num0 {
@@ -169,7 +169,7 @@ impl SansculottideDay {
     }
 
     /// # Panics
-    /// 
+    ///
     /// Panics if `num` is greater than 6 or less than 1.
     pub fn from_num(num: i64) -> Self {
         Self::from_num0(num - 1)

@@ -1,5 +1,5 @@
-use std::ops::{Add, AddAssign};
 use crate::*;
+use std::ops::{Add, AddAssign};
 
 // DateTime to chrono stuff
 
@@ -70,14 +70,16 @@ impl Add<chrono::Duration> for DateTime {
     type Output = Self;
 
     fn add(self, rhs: chrono::Duration) -> Self::Output {
-        let seconds = self.timestamp().seconds + rhs.num_seconds() * REPUBLICAN_SECONDS_PER_DAY / GREGORIAN_SECONDS_PER_DAY;
+        let seconds = self.timestamp().seconds
+            + rhs.num_seconds() * REPUBLICAN_SECONDS_PER_DAY / GREGORIAN_SECONDS_PER_DAY;
         Self::from_timestamp(Timestamp { seconds })
     }
 }
 
 impl AddAssign<chrono::Duration> for DateTime {
     fn add_assign(&mut self, rhs: chrono::Duration) {
-        let ts = self.timestamp().seconds + rhs.num_seconds() * REPUBLICAN_SECONDS_PER_DAY / GREGORIAN_SECONDS_PER_DAY;
+        let ts = self.timestamp().seconds
+            + rhs.num_seconds() * REPUBLICAN_SECONDS_PER_DAY / GREGORIAN_SECONDS_PER_DAY;
         *self = Self::from_timestamp(Timestamp { seconds: ts });
     }
 }
