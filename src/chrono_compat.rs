@@ -19,8 +19,8 @@ impl TryFrom<DateTime> for chrono::NaiveDateTime {
 
     fn try_from(value: DateTime) -> Result<Self, Self::Error> {
         let ts = value.timestamp().to_unix();
-        match Self::from_timestamp_opt(ts, 0) {
-            Some(dt) => Ok(dt),
+        match chrono::DateTime::from_timestamp(ts, 0) {
+            Some(dt) => Ok(dt.naive_utc()),
             None => Err(()),
         }
     }
@@ -49,7 +49,7 @@ impl TryFrom<chrono::NaiveDateTime> for DateTime {
     type Error = ();
 
     fn try_from(value: chrono::NaiveDateTime) -> Result<Self, Self::Error> {
-        let ts = value.timestamp();
+        let ts = value.and_utc().timestamp();
         let ts = Timestamp::from_unix(ts);
         Ok(Self::from_timestamp(ts))
     }
@@ -60,7 +60,7 @@ impl TryFrom<chrono::NaiveDate> for DateTime {
 
     fn try_from(value: chrono::NaiveDate) -> Result<Self, Self::Error> {
         let naive_dt = value.and_hms_opt(0, 0, 0).ok_or(())?;
-        let ts = naive_dt.timestamp();
+        let ts = naive_dt.and_utc().timestamp();
         let ts = Timestamp::from_unix(ts);
         Ok(Self::from_timestamp(ts))
     }
@@ -71,7 +71,7 @@ impl Add<chrono::Duration> for DateTime {
 
     fn add(self, rhs: chrono::Duration) -> Self::Output {
         let seconds = self.timestamp().seconds + rhs.num_seconds() * REPUBLICAN_SECONDS_PER_DAY / GREGORIAN_SECONDS_PER_DAY;
-        Self::from_timestamp(Timestamp { seconds: seconds })
+        Self::from_timestamp(Timestamp { seconds })
     }
 }
 
@@ -100,8 +100,8 @@ impl TryFrom<Date> for chrono::NaiveDateTime {
 
     fn try_from(value: Date) -> Result<Self, Self::Error> {
         let ts = value.timestamp().to_unix();
-        match Self::from_timestamp_opt(ts, 0) {
-            Some(dt) => Ok(dt),
+        match chrono::DateTime::from_timestamp(ts, 0) {
+            Some(dt) => Ok(dt.naive_utc()),
             None => Err(()),
         }
     }
@@ -130,7 +130,7 @@ impl TryFrom<chrono::NaiveDateTime> for Date {
     type Error = ();
 
     fn try_from(value: chrono::NaiveDateTime) -> Result<Self, Self::Error> {
-        let ts = value.timestamp();
+        let ts = value.and_utc().timestamp();
         let ts = Timestamp::from_unix(ts);
         Ok(Self::from_timestamp(ts))
     }
@@ -141,7 +141,7 @@ impl TryFrom<chrono::NaiveDate> for Date {
 
     fn try_from(value: chrono::NaiveDate) -> Result<Self, Self::Error> {
         let naive_dt = value.and_hms_opt(0, 0, 0).ok_or(())?;
-        let ts = naive_dt.timestamp();
+        let ts = naive_dt.and_utc().timestamp();
         let ts = Timestamp::from_unix(ts);
         Ok(Self::from_timestamp(ts))
     }
