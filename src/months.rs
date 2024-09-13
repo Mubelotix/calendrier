@@ -1,5 +1,3 @@
-use crate::*;
-
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Month {
     Vendémiaire,
@@ -14,7 +12,7 @@ pub enum Month {
     Messidor,
     Thermidor,
     Fructidor,
-    Sansculotides
+    Sansculotides,
 }
 
 impl Month {
@@ -77,7 +75,7 @@ impl Month {
     }
 
     /// # Panics
-    /// 
+    ///
     /// Panics if `num0` is greater than 12.
     pub fn from_num0(num0: i64) -> Self {
         match num0 {
@@ -94,12 +92,12 @@ impl Month {
             10 => Month::Thermidor,
             11 => Month::Fructidor,
             12 => Month::Sansculotides,
-            _ => panic!("Invalid month number: {}", num0)
+            _ => panic!("Invalid month number: {}", num0),
         }
     }
 
     /// # Panics
-    /// 
+    ///
     /// Panics if `num` is greater than 11.
     pub fn from_num(num: i64) -> Self {
         Self::from_num0(num - 1)

@@ -13,9 +13,10 @@ const DAY_COUNTS: &[i64] = &[
 ];
 
 pub fn get_year_start(republican_year: i64) -> i64 {
-    let republican_year0 = match republican_year > 0 {
-        true => republican_year - 1,
-        false => republican_year
+    let republican_year0 = if republican_year > 0 {
+        republican_year - 1
+    } else {
+        republican_year
     };
     get_year_start0(republican_year0)
 }
@@ -40,9 +41,10 @@ pub fn get_year_start0(republican_year0: i64) -> i64 {
 }
 
 pub fn get_day_count(republican_year: i64) -> i64 {
-    let republican_year0 = match republican_year > 0 {
-        true => republican_year - 1,
-        false => republican_year
+    let republican_year0 = if republican_year > 0 {
+        republican_year - 1
+    } else {
+        republican_year
     };
     get_day_count0(republican_year0)
 }
@@ -83,9 +85,10 @@ pub fn ts_to_year0(ts: i64) -> i64 {
 
 pub fn ts_to_year(ts: i64) -> i64 {
     let year0 = ts_to_year0(ts);
-    match year0 >= 0 {
-        true => year0 + 1,
-        false => year0
+    if year0 >= 0 {
+        year0 + 1
+    } else {
+        year0
     }
 }
 
@@ -124,7 +127,7 @@ fn test_year_start() {
             "year {}", year
         );
         previous_year_start = year_start;
-    }   
+    }
     let mut next_year_start = get_year_start(-1);
     for year in (-10000..=-2).rev() {
         let year_start = get_year_start(year);

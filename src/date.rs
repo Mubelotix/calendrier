@@ -25,7 +25,7 @@ impl Date {
     }
 
     /// # Panics
-    /// 
+    ///
     /// Panics if:
     /// - year is 0,
     /// - month is not in [1, 13],
@@ -48,7 +48,7 @@ impl Date {
     }
 
     /// # Panics
-    /// 
+    ///
     /// Panics if:
     /// - month is not in [0, 12],
     /// - day is not in [0, 29].
@@ -63,7 +63,7 @@ impl Date {
     }
 
     /// Returns the franciade number starting from 0.
-    /// 
+    ///
     /// A franciade is defined as 4 years, the first franciade ending in year 3.
     /// It is *not* defined as a period of years ending with a sextile year.
     /// Not all franciades are `365*4+1` days long.
@@ -72,15 +72,16 @@ impl Date {
     }
 
     /// Returns the franciade number starting from 1.
-    /// 
+    ///
     /// A franciade is defined as 4 years, the first franciade ending in year 3.
     /// It is *not* defined as a period of years ending with a sextile year.
     /// Not all franciades are `365*4+1` days long.
     pub fn franciade(&self) -> i64 {
         let franciade0 = self.franciade0();
-        match franciade0 >= 0 {
-            true => franciade0 + 1,
-            false => franciade0,
+        if franciade0 >= 0 {
+            franciade0 + 1
+        } else {
+            franciade0
         }
     }
 
@@ -91,9 +92,10 @@ impl Date {
 
     /// Returns the year but starting from 1.
     pub fn year(&self) -> i64 {
-        match self.year0 >= 0 {
-            true => self.year0 + 1,
-            false => self.year0,
+        if self.year0 >= 0 {
+            self.year0 + 1
+        } else {
+            self.year0
         }
     }
 
@@ -155,7 +157,9 @@ impl Date {
     /// Returns the timestamp
     pub fn timestamp(&self) -> Timestamp {
         Timestamp {
-            seconds: get_year_start0(self.year0) + self.month0 * SECONDS_PER_MONTH + self.day0 * SECONDS_PER_DAY,
+            seconds: get_year_start0(self.year0)
+                + self.month0 * SECONDS_PER_MONTH
+                + self.day0 * SECONDS_PER_DAY,
         }
     }
 
@@ -232,7 +236,13 @@ impl Date {
             self.decade_day(),
             self.day(),
             self.month(),
-            thousand_years, five_hundred_years, hundred_years, fifty_years, ten_years, five_years, one_year
+            thousand_years,
+            five_hundred_years,
+            hundred_years,
+            fifty_years,
+            ten_years,
+            five_years,
+            one_year
         )
     }
 
