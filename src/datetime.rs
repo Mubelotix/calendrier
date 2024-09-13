@@ -118,7 +118,11 @@ impl DateTime {
     /// It is *not* defined as a period of years ending with a sextile year.
     /// Not all franciades are `365*4+1` days long.
     pub fn franciade0(&self) -> i64 {
-        ((self.year0 + 2) / 4) - 1
+        if self.year0 >= 0 {
+            (self.year0 + 1) / 4
+        } else {
+            (self.year0 - 2) / 4
+        }
     }
 
     /// Returns the franciade number starting from 1.
@@ -128,7 +132,7 @@ impl DateTime {
     /// Not all franciades are `365*4+1` days long.
     pub fn franciade(&self) -> i64 {
         let franciade0 = self.franciade0();
-        match franciade0 > 0 {
+        match franciade0 >= 0 {
             true => franciade0 + 1,
             false => franciade0,
         }
@@ -141,7 +145,7 @@ impl DateTime {
 
     /// Returns the year but starting from 1.
     pub fn year(&self) -> i64 {
-        match self.year0 > 0 {
+        match self.year0 >= 0 {
             true => self.year0 + 1,
             false => self.year0,
         }
@@ -325,8 +329,8 @@ mod tests {
         let datetime = DateTime::from_timestamp(Timestamp { seconds: 0 });
         assert_eq!(datetime.franciade0(), 0);
         assert_eq!(datetime.franciade(), 1);
-
-        let datetime = DateTime::from_timestamp(Timestamp { seconds: -1 });
+        
+        let datetime = DateTime::from_timestamp(Timestamp { seconds: -400*SECONDS_PER_DAY });
         assert_eq!(datetime.franciade0(), -1);
         assert_eq!(datetime.franciade(), -1);
 
