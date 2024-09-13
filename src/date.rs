@@ -78,7 +78,7 @@ impl Date {
     /// Not all franciades are `365*4+1` days long.
     pub fn franciade(&self) -> i64 {
         let franciade0 = self.franciade0();
-        if franciade0 > 0 {
+        if franciade0 >= 0 {
             franciade0 + 1
         } else {
             franciade0
@@ -92,7 +92,7 @@ impl Date {
 
     /// Returns the year but starting from 1.
     pub fn year(&self) -> i64 {
-        if self.year0 > 0 {
+        if self.year0 >= 0 {
             self.year0 + 1
         } else {
             self.year0
