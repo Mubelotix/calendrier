@@ -3,6 +3,7 @@ pub mod datetime;
 pub mod day;
 pub mod months;
 pub mod timestamp;
+pub mod years;
 pub use date::*;
 pub use datetime::*;
 pub use day::*;
@@ -10,10 +11,10 @@ pub use months::*;
 pub use timestamp::*;
 pub mod equinoxes;
 pub use equinoxes::*;
-pub mod years;
 pub use years::*;
 #[cfg(feature = "chrono")]
 pub mod chrono_compat;
+pub mod generated;
 
 pub(crate) const SECONDS_PER_DAY: i64 = 100000;
 pub(crate) const DAYS_PER_MONTH: i64 = 30;

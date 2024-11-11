@@ -1,5 +1,3 @@
-use crate::*;
-
 /// Sources:
 /// https://www.imcce.fr/newsletter/docs/Equinoxe_automne_1583_2999.pdf
 /// https://fr.wikisource.org/wiki/D%C3%A9cret_de_la_Convention_nationale_portant_sur_la_cr%C3%A9ation_du_calendrier_r%C3%A9publicain
@@ -50,14 +48,14 @@ impl Timestamp {
     pub fn to_unix(&self) -> i64 {
         let gregorian_seconds =
             self.seconds * GREGORIAN_SECONDS_PER_DAY / REPUBLICAN_SECONDS_PER_DAY;
-        let unix_timestamp =
-            gregorian_seconds + REPUBLICAN_EPOCH_GREGORIAN_SECONDS - OFFSET_GREGORIAN_SECONDS;
-        unix_timestamp
+        gregorian_seconds + REPUBLICAN_EPOCH_GREGORIAN_SECONDS - OFFSET_GREGORIAN_SECONDS
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use crate::DateTime;
+
     use super::*;
     use chrono::TimeZone;
 
