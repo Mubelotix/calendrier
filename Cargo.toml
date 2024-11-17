@@ -16,7 +16,7 @@ chrono = { version = "0.4.31", features = ["serde"], optional = true }
 [features]
 default = ["chrono"]
 chrono = ["dep:chrono"]
-no-time-offset = [] # Disables the time offset (1080 seconds by default)
+no-time-offset = []      # Disables the time offset (1080 seconds by default)
 average-time-offset = [] # Enables the most accurate time offset (1029 seconds)
 
 [dev-dependencies]
@@ -24,3 +24,6 @@ chrono = "0.4.31"
 
 [build-dependencies]
 chrono = "0.4.31"
+
+[[example]]
+name = "today"
