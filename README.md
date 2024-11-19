@@ -12,6 +12,10 @@ A time offset of 18 minutes is applied to correct the slow shift of the measure 
 
 ## Usage
 
+Run `cargo run --example today` to know what day it is.
+
+To use it in a library, here is an example:
+
 ```rust
 use calendrier::*;
 
