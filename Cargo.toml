@@ -24,6 +24,3 @@ chrono = "0.4.31"
 
 [build-dependencies]
 chrono = "0.4.31"
-
-[[example]]
-name = "today"
