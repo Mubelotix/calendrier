@@ -9,7 +9,9 @@ pub use datetime::*;
 pub use day::*;
 pub use months::*;
 pub use timestamp::*;
+pub mod day_names;
 pub mod equinoxes;
+pub use day_names::*;
 pub use equinoxes::*;
 pub use years::*;
 #[cfg(feature = "chrono")]
