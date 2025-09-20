@@ -194,6 +194,16 @@ impl DateTime {
         self.day0() + 1
     }
 
+    /// Returns the name of the day
+    pub fn day_name(&self) -> &'static str {
+        day_name(self.month(), self.day())
+    }
+
+    /// Returns the name of the day preceded by the appropriate article
+    pub fn day_name_with_article(&self) -> &'static str {
+        day_name_with_article(self.month(), self.day())
+    }
+
     /// Returns the decade but starting from 0.
     pub fn decade0(&self) -> i64 {
         self.day0().div_euclid(DAYS_PER_DECADE)
