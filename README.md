@@ -10,6 +10,8 @@ The equinoxe dates [were collected and computed](https://www.imcce.fr/newsletter
 
 A time offset of 18 minutes is applied to correct the slow shift of the measure of time since the 18th century.
 
+[See this crate in action](https://calendrier.dera.page)
+
 ## Usage
 
 Run `cargo run --example today` to know what day it is.
