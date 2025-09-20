@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-
 use chrono::prelude::*;
 
 const REPUBLICAN_EPOCH_GREGORIAN_SECONDS: i64 = -5594228280;
@@ -51,8 +50,9 @@ fn main() {
         .map(|ts| format!("    {ts},"))
         .collect::<Vec<_>>();
 
+    let outdir = std::env::var("OUT_DIR").expect("Could not get OUT_DIR");
     let timestamps_as_string = timestamps.join("\n");
-    let path = "src/generated/equinoxes.rs";
+    let path = format!("{outdir}/equinoxes.rs");
     std::fs::write(
         path,
         format!("pub const TIMESTAMPS: &[i64] = &[\n{timestamps_as_string}\n];"),

@@ -16,7 +16,6 @@ pub use equinoxes::*;
 pub use years::*;
 #[cfg(feature = "chrono")]
 pub mod chrono_compat;
-pub mod generated;
 
 pub(crate) const SECONDS_PER_DAY: i64 = 100000;
 pub(crate) const DAYS_PER_MONTH: i64 = 30;

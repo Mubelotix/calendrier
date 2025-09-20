@@ -1,4 +1,4 @@
-use crate::{generated::equinoxes::TIMESTAMPS, REPUBLICAN_SECONDS_PER_DAY};
+use crate::{equinoxes::TIMESTAMPS, REPUBLICAN_SECONDS_PER_DAY};
 
 fn try_year_starts0(republican_year0: i64) -> Option<i64> {
     let index = republican_year0 + 209;

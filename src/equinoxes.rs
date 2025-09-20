@@ -1,3 +1,5 @@
+include!(concat!(env!("OUT_DIR"), "/equinoxes.rs"));
+
 pub const fn get_equinox(republican_year: i64) -> i64 {
     let republican_year0 = if republican_year > 0 {
         republican_year - 1
@@ -6,7 +8,7 @@ pub const fn get_equinox(republican_year: i64) -> i64 {
     };
 
     let index = republican_year0 + 209;
-    crate::generated::equinoxes::TIMESTAMPS[index as usize]
+    TIMESTAMPS[index as usize]
 }
 
 #[test]
