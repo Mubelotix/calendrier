@@ -8,8 +8,6 @@ Outside of this range, years will begin to shift by one day every few years.
 
 The equinoxe dates [were collected and computed](https://www.imcce.fr/newsletter/docs/Equinoxe_automne_1583_2999.pdf) by the Observatoire de Paris.
 
-A time offset of 18 minutes is applied to correct the slow shift of the measure of time since the 18th century.
-
 [See this crate in action](https://calendrier.dera.page)
 
 ## Usage

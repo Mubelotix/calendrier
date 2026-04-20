@@ -2,6 +2,8 @@ pub mod date;
 pub mod datetime;
 pub mod day;
 pub mod months;
+#[cfg(feature = "solar")]
+pub mod solar;
 pub mod timestamp;
 pub mod years;
 pub use date::*;
@@ -13,6 +15,8 @@ pub mod day_names;
 pub mod equinoxes;
 pub use day_names::*;
 pub use equinoxes::*;
+#[cfg(feature = "solar")]
+pub use solar::*;
 pub use years::*;
 #[cfg(feature = "chrono")]
 pub mod chrono_compat;

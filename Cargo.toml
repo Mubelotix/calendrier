@@ -11,14 +11,16 @@ edition = "2024"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-chrono = { version = "0.4.42", features = ["serde"], optional = true }
+chrono = { version = "0.4.44", features = ["serde"], optional = true }
+novas = { version = "0.1", optional = true }
 
 [features]
 default = ["chrono"]
 chrono = ["dep:chrono"]
+solar = ["dep:novas"]
 
 [dev-dependencies]
-chrono = "0.4.42"
+chrono = "0.4.44"
 
 [build-dependencies]
-chrono = "0.4.42"
+chrono = "0.4.44"
