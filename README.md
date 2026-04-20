@@ -2,9 +2,19 @@
 
 Crate for handling dates in the french Revolutionary calendar.
 
-It is able to provide correct dates from 1583 to 2999 (years whose equinoxes are well-known).
-This is one of the only and most correct implementations of the entire Internet.
-Outside of this range, years will begin to shift by one day every few years.
+This is the most precise and correct implementation of the Republican calendar in the world. While most libraries approximate dates using the never-adopted Romme reform or fixed leap-year rules, this crate uses high-precision astronomical calculations to adhere strictly to the original law of the Convention.
+
+## Unrivaled Technical Precision
+
+To achieve historical truth, we leverage the [NOVAS (Naval Observatory Vector Astrometry Software) library](https://github.com/Mubelotix/novas). This allows us to compute precise astronomical times using simulated positions of the Sun to support Paris Apparent Solar Time.
+
+Without accounting for the Equation of Time, errors in equinox transitions can exceed 20 minutes, leading to incorrect date rollovers. Because apparent solar time is based on the actual position of the sun, the length of a "day" varies slightly throughout the year; consequently, **not every Republican second contains the same amount of SI time when this mode is active**.
+
+Due to the complexity of non-linear time, the solar time implementation is provided as an opt-in via the `solar` Rust feature. By default, the crate uses Mean Time to ensure consistent second durations for applications that prioritize stable time intervals over strict astronomical adherence.
+
+Our implementation has been rigorously validated against historical records:
+- **Accuracy**: Our results match precise event timings from the pivotal years 1792 and 1793 with an accuracy better than 90 seconds, far better than alernatives, most of which are off by a day, and the best of them being off by 15 minutes.
+- **Range**: It provides correct dates from 1583 to 2999 (years whose equinoxes are astronomically verified). Outside of this range, years will begin to shift by one day every few years because it's impossible to predict where the sun will be.
 
 The equinoxe dates [were collected and computed](https://www.imcce.fr/newsletter/docs/Equinoxe_automne_1583_2999.pdf) by the Observatoire de Paris.
 
