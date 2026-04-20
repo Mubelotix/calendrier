@@ -1,3 +1,4 @@
+use std::sync::{LazyLock, Mutex};
 
 const UNIX_EPOCH_JD: f64 = 2440587.5;
 
@@ -68,9 +69,8 @@ pub fn delta_t(month: usize, year: isize) -> f64 {
     }
 }
 
-/// Converts a standard Unix timestamp (Mean Time) into a "Solar" Unix timestamp 
-/// (Apparent Time) by applying the Equation of Time correction.
-pub fn get_solar_unix_timestamp(unix_timestamp: i64) -> f64 {
+#[allow(unsafe_op_in_unsafe_fn)]
+unsafe fn inner_get_solar_unix_timestamp(unix_timestamp: i64) -> f64 {
     let seconds_since_epoch = unix_timestamp as f64;
     let jd_utc = UNIX_EPOCH_JD + seconds_since_epoch / 86400.0;
 
@@ -80,9 +80,7 @@ pub fn get_solar_unix_timestamp(unix_timestamp: i64) -> f64 {
     let mut month = 0;
     let mut day = 0;
     let mut hour = 0.0;
-    unsafe {
-        novas::cal_date(jd_utc, &mut year, &mut month, &mut day, &mut hour);
-    }
+    novas::cal_date(jd_utc, &mut year, &mut month, &mut day, &mut hour);
 
     // 2. Calculate Delta T using your polynomial function
     let dt = delta_t(month as usize, year as isize);
@@ -93,38 +91,32 @@ pub fn get_solar_unix_timestamp(unix_timestamp: i64) -> f64 {
     let jd_high = jd_ut1.floor();
     let jd_low = jd_ut1 - jd_high;
 
-// 4. Calculate Sun's Apparent Right Ascension
+    // 4. Calculate Sun's Apparent Right Ascension
     let mut sun_ra = 0.0;
     let mut sun_dec = 0.0;
     let mut sun_dis = 0.0;
 
-    let mut sun_obj = unsafe { core::mem::zeroed::<novas::object>() };
+    let mut sun_obj = core::mem::zeroed::<novas::object>();
     sun_obj.type_ = 0;
     sun_obj.number = 10; // Sun
 
     // Attempt high-precision (requires ephemeris for dates outside 1900-2100)
-    let sun_status = unsafe { 
-        novas::app_planet(jd_tt, &mut sun_obj, 1, &mut sun_ra, &mut sun_dec, &mut sun_dis) 
-    };
+    let sun_status = novas::app_planet(jd_tt, &mut sun_obj, 1, &mut sun_ra, &mut sun_dec, &mut sun_dis);
 
     if sun_status != 0 {
         // Fallback: Use internal analytic theory (valid for a much wider range, e.g., 1793)
         let mut sun_pos = [0.0f64; 3];
         let mut sun_vel = [0.0f64; 3];
 
-        unsafe {
-            // body: 0 = Sun, origin: 1 = Earth.
-            novas::sys::solarsystem(jd_tt, 0, 1, sun_pos.as_mut_ptr(), sun_vel.as_mut_ptr());
-            // Convert the position vector [x, y, z] back to RA/Dec
-            novas::sys::vector2radec(sun_pos.as_mut_ptr(), &mut sun_ra, &mut sun_dec);
-        }
+        // body: 0 = Sun, origin: 1 = Earth.
+        novas::sys::solarsystem(jd_tt, 0, 1, sun_pos.as_mut_ptr(), sun_vel.as_mut_ptr());
+        // Convert the position vector [x, y, z] back to RA/Dec
+        novas::sys::vector2radec(sun_pos.as_mut_ptr(), &mut sun_ra, &mut sun_dec);
     }
 
     // 5. Calculate Sidereal Time (GAST)
     let mut gast = 0.0;
-    let sidereal_status = unsafe { 
-        novas::sidereal_time(jd_high, jd_low, dt, 1, 1, 0, &mut gast) 
-    };
+    let sidereal_status = novas::sidereal_time(jd_high, jd_low, dt, 1, 1, 0, &mut gast);
     assert_eq!(sidereal_status, 0, "sidereal_time failed");
 
     // 6. Calculate Equation of Time (EoT)
@@ -147,6 +139,24 @@ pub fn get_solar_unix_timestamp(unix_timestamp: i64) -> f64 {
 
     // 7. Return corrected Unix timestamp
     seconds_since_epoch + (eot_hours * 3600.0)
+}
+
+/// Converts a standard Unix timestamp (Mean Time) into a "Solar" Unix timestamp 
+/// (Apparent Time) by applying the Equation of Time correction.
+pub fn get_solar_unix_timestamp(unix_timestamp: i64) -> f64 {
+    static NOVAS_LOCK: LazyLock<Mutex<()>> = LazyLock::new(|| Mutex::new(()));
+    
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        let _guard = NOVAS_LOCK.lock().unwrap();
+        unsafe { inner_get_solar_unix_timestamp(unix_timestamp) }
+    }
+
+    #[cfg(target_arch = "wasm32")]
+    {
+        // On WASM, we skip the lock overhead entirely as it's single-threaded.
+        unsafe { inner_get_solar_unix_timestamp(unix_timestamp) }
+    }
 }
 
 pub fn get_unix_from_solar_timestamp(solar_timestamp: f64) -> i64 {
