@@ -2,6 +2,9 @@
 name = "calendrier-web"
 version = "0.1.0"
 edition = "2024"
+description = "Most precise and correct implementation of the French Republican calendar in the world"
+repository = "https://github.com/Mubelotix/calendrier"
+license = "MIT"
 
 [lib]
 crate-type = ["cdylib"]
