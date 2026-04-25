@@ -2,7 +2,7 @@
 
 Crate for handling dates in the french Revolutionary calendar.
 
-This package is a wrapper over the [Rust `calendrier` implementation](https://github.com/Mubelotix/calendrier) that can run using WASM in the browser or Node.js. It will be shown on npmjs.com for the `@mubelotix/calendrier-solar` package.
+This package is a wrapper over the [Rust `calendrier` implementation](https://github.com/Mubelotix/calendrier) that can run using WASM in the browser or Node.js.
 
 **Note:** This package has apparent solar time **enabled** for maximum historical accuracy. If you want to use mean time instead for stable second durations, please use the [non-solar version (`@mubelotix/calendrier`)](https://www.npmjs.com/package/@mubelotix/calendrier).
 
