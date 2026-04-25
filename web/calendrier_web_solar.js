@@ -1,1 +1,1 @@
-../wrapper/pkg-solar/calendrier_web.js
+../js/pkg-solar/calendrier_web.js

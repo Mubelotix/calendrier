@@ -11,5 +11,8 @@ fi
 
 ./build.sh
 
+cp README-non-solar.md ./pkg/README.md
+cp README.md ./pkg-solar/README.md
+
 npm publish --access public $DRY_RUN ./pkg
 npm publish --access public $DRY_RUN ./pkg-solar

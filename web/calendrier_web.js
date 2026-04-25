@@ -1,1 +1,1 @@
-../wrapper/pkg/calendrier_web.js
+../js/pkg/calendrier_web.js

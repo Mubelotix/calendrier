@@ -26,7 +26,7 @@ mv "$tmp_dir/pkg-default" pkg
 set_pkg_name pkg "@mubelotix/calendrier"
 set_pkg_name pkg-solar "@mubelotix/calendrier-solar"
 
-ln -sfn ../wrapper/pkg/calendrier_web.js ../static/calendrier_web.js
-ln -sfn ../wrapper/pkg/calendrier_web_bg.wasm ../static/calendrier_web_bg.wasm
-ln -sfn ../wrapper/pkg-solar/calendrier_web.js ../static/calendrier_web_solar.js
-ln -sfn ../wrapper/pkg-solar/calendrier_web_bg.wasm ../static/calendrier_web_solar_bg.wasm
+ln -sfn ../js/pkg/calendrier_web.js ../web/calendrier_web.js
+ln -sfn ../js/pkg/calendrier_web_bg.wasm ../web/calendrier_web_bg.wasm
+ln -sfn ../js/pkg-solar/calendrier_web.js ../web/calendrier_web_solar.js
+ln -sfn ../js/pkg-solar/calendrier_web_bg.wasm ../web/calendrier_web_solar_bg.wasm
