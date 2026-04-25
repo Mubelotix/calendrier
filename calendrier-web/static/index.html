@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendrier Républicain</title>
+    <meta name="description" content="Calendrier révolutionnaire français avec heure décimale en temps réel. Découvrez la date républicaine d'aujourd'hui et l'heure décimale selon le système révolutionnaire français.">
+    <meta name="keywords" content="calendrier républicain, calendrier révolutionnaire, heure décimale, temps décimal, révolution française, calendrier français">
+    <meta name="author" content="Mubelotix">
+    <meta name="robots" content="index, follow">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Calendrier Républicain Français - Heure Décimale">
+    <meta property="og:description" content="Calendrier révolutionnaire français avec heure décimale en temps réel. Découvrez la date républicaine d'aujourd'hui et l'heure décimale selon le système révolutionnaire français.">
+    <meta property="og:url" content="https://calendrier.dera.page">
+    <!-- <meta property="og:image" content="https://calendrier.dera.page/art.png"> -->
+    <meta property="og:locale" content="fr_FR">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Calendrier Républicain Français - Heure Décimale">
+    <meta name="twitter:description" content="Calendrier révolutionnaire français avec heure décimale en temps réel.">
+    <!-- <meta name="twitter:image" content="https://calendrier.dera.page/art.png"> -->
+    <link rel="canonical" href="https://calendrier.dera.page">
+    <style>
+        :root {
+            --background-100: #fff;
+            --background-200: #eee;
+            --background-300: #fff;
+            --toggle-background: #7d777b;
+            --text: #000;
+            --primary: #DC6ACF;
+        }
+
+        /* TODO Allow changing theme */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background-100: #241b22;
+                --background-200: #393037;
+                --background-300: #4e464c;
+                --background-400: #655e63;
+                --background-500: #7d777b;
+                --background-600: #969094;
+                --toggle-background: var(--background-300);
+                --text: #fff;
+            }
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        body {
+            background-color: var(--background-100);
+            color: var(--text);
+            font-family: Arial, sans-serif;
+        }
+
+        main {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        #main-info {
+            text-align: center;
+        }
+
+        #date, #time {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-block: 2rem;
+        }
+
+        #day-name {
+            font-size: 2rem;
+            font-weight: normal;
+            margin-block: 2rem;
+        }
+
+        footer {
+            background-color: var(--background-200);
+            text-align: center;
+            padding: .5rem;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Scrolling number animation */
+        .time-digit {
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+            vertical-align: top;
+            height: 1.2em;
+        }
+
+        .time-digit-inner {
+            transition: transform 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .time-digit-value {
+            height: 1.2em;
+            line-height: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+    <style>
+        #toggles {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: .5rem;
+        }
+
+        .toggleWrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .toggleWrapper label {
+            cursor: help !important;
+        }
+
+        /* To hide the checkbox */
+        .checkboxInput {
+            display: none;
+        }
+
+        .toggleSwitch {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 50px;
+            height: 30px;
+            background-color: var(--toggle-background);
+            border-radius: 20px;
+            cursor: pointer;
+            transition-duration: .2s;
+        }
+
+        .toggleSwitch::after {
+            content: "";
+            position: absolute;
+            height: 10px;
+            width: 10px;
+            left: 5px;
+            background-color: transparent;
+            border-radius: 50%;
+            transition-duration: .2s;
+            box-shadow: 5px 2px 7px rgba(8, 8, 8, 0.26);
+            border: 5px solid white;
+        }
+
+        .checkboxInput:checked+.toggleSwitch::after {
+            transform: translateX(100%);
+            transition-duration: .2s;
+            background-color: white;
+        }
+
+        /* Switch background change */
+        .checkboxInput:checked+.toggleSwitch {
+            background-color: var(--primary);
+            transition-duration: .2s;
+        }
+    </style>
+    <style>
+        .tooltip, .tooltipDown {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .tooltip:hover .tooltiptext, .tooltipDown:hover .tooltiptext,
+        .tooltip .tooltiptext:hover, .tooltipDown .tooltiptext:hover {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .tooltiptext {
+            visibility: hidden;
+            width: 160px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -80px;
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            transition-delay: 0s;
+        }
+
+        .tooltip:not(:hover) .tooltiptext:not(:hover),
+        .tooltipDown:not(:hover) .tooltiptext:not(:hover) {
+            transition-delay: 0.5s;
+        }
+
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+
+        .tooltipDown .tooltiptext {
+            bottom: auto;
+            top: 125%;
+        }
+
+        .tooltipDown .tooltiptext::before {
+            content: "";
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent transparent #333 transparent;
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            color: var(--primary);
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .scroll-indicator:hover {
+            opacity: 0.7;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0) rotate(90deg);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px) rotate(90deg);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px) rotate(90deg);
+            }
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            background-color: var(--background-200);
+            padding: 4rem 2rem;
+            min-height: 100%;
+            box-sizing: border-box;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--text);
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+            border-radius: .5rem;
+            background-color: var(--background-100);
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease;
+            border: 1px solid transparent;
+            border-radius: .5rem;
+            list-style: none;
+        }
+
+        .faq-question::-webkit-details-marker {
+            display: none;
+        }
+
+        .faq-question::marker {
+            content: none;
+        }
+
+        .faq-question:hover {
+            background-color: var(--background-300);
+            border: 1px solid var(--primary);
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem 1.5rem 1.5rem;
+        }
+
+        .faq-item[open] .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        .faq-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-answer p {
+            margin: 0.5rem 0;
+            line-height: 1.6;
+        }
+
+        .faq-answer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .faq-answer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div id="toggles">
+            <!-- TODO: Remember state across reloads -->
+
+            <label for="decimalTime" class="toggleWrapper tooltipDown">
+                Heure décimale
+                <input type="checkbox" id="decimalTime" class="checkboxInput" checked>
+                <div for="decimalTime" class="toggleSwitch"></div>
+                <div class="tooltiptext">
+                    Un jour contient 10 heures, une heure 100 minutes et une minute 100 secondes.
+                    <a href="https://fr.wikipedia.org/wiki/Temps_d%C3%A9cimal_en_France" target="_blank">Wikipédia</a>
+                </div>
+            </label>
+
+            <label for="parisTime" class="toggleWrapper tooltipDown">
+                Heure de Paris
+                <input type="checkbox" id="parisTime" class="checkboxInput" checked>
+                <div for="parisTime" class="toggleSwitch"></div>
+                <div class="tooltiptext">
+                    Affiche l'heure comme à Paris. Si tu la désactives, l'affichage s'aligne sur le méridien de Greenwich, souvent pris comme référence mondiale.
+                </div>
+            </label>
+
+            <label for="solarTime" class="toggleWrapper tooltipDown">
+                Temps solaire vrai
+                <input type="checkbox" id="solarTime" class="checkboxInput" checked>
+                <div for="solarTime" class="toggleSwitch"></div>
+                <div class="tooltiptext">
+                    Utilise une version du calendrier qui suit le soleil au plus près. Si tu la désactives, tu reviens au calcul normal.
+                </div>
+            </label>
+
+            <label for="summerTime" class="toggleWrapper tooltipDown">
+                Heure avancée
+                <input type="checkbox" id="summerTime" class="checkboxInput">
+                <div for="summerTime" class="toggleSwitch"></div>
+                <div class="tooltiptext">
+                    Prend en compte le décalage saisonnier de ton navigateur. Si tu la désactives, on garde l'heure universelle.
+                </div>
+            </label>
+        </div>
+
+
+        <div id="main-info">
+            <h1 id="date"><span id="num-day">-</span> <span id="month">-</span> <span id="num-year">-</span></h1>
+
+            <h2 id="day-name">-</h2>
+
+            <h2 id="time">
+                <span id="hour" class="time-number">--</span>:<span id="minute" class="time-number">--</span>:<span id="second" class="time-number">--</span>
+            </h2>
+        </div>
+
+        <div class="scroll-indicator" onclick="scrollToFAQ()">
+            &#8250;
+        </div>
+    </main>
+
+    <div class="faq-section" id="faq-section">
+        <div class="faq-container">
+            <h2 class="faq-title">Questions Fréquemment Posées</h2>
+            
+            <details class="faq-item">
+                <summary class="faq-question">
+                    <span>Qu'est-ce que le calendrier républicain ?</span>
+                    <span class="faq-icon">&#8964;</span>
+                </summary>
+                <div class="faq-answer">
+                    <p>Le calendrier républicain, aussi appelé calendrier révolutionnaire français, fut créé pendant la Révolution française en 1793. Il est destiné à remplacer le calendrier grégorien et à marquer une rupture avec l'Ancien Régime et l'influence religieuse.</p>
+                    <p>Ce calendrier compte 12 mois de 30 jours chacun, plus 5 ou 6 jours complémentaires. L'année commence à l'équinoxe d'automne (vers le 22 septembre), jour d'anniversaire de la République.</p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary class="faq-question">
+                    <span>Comment fonctionne l'heure décimale ?</span>
+                    <span class="faq-icon">&#8964;</span>
+                </summary>
+                <div class="faq-answer">
+                    <p>L'heure décimale divise la journée en 10 heures au lieu de 24. Chaque heure contient 100 minutes décimales, et chaque minute contient 100 secondes décimales.</p>
+                    <p>L'intérêt est de simplifier les calculs de temps et conversions entre les différentes unités.</p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary class="faq-question">
+                    <span>Comment fonctionnent les options de temps ?</span>
+                    <span class="faq-icon">&#8964;</span>
+                </summary>
+                <div class="faq-answer">
+                    <p>Ces trois options servent à choisir quelle manière d'afficher l'heure te convient le mieux. Elles agissent séparément, donc tu peux en activer une, deux ou trois selon ce que tu veux voir à l'écran.</p>
+                    <ul>
+                        <li>
+                            <strong>Heure de Paris :</strong> garde l'affichage calé sur Paris, qui est la référence naturelle du calendrier républicain. Si tu la désactives, l'affichage se décale vers Greenwich, ce qui permet de comparer avec une référence plus universelle.
+                        </li>
+                        <li>
+                            <strong>Temps solaire vrai :</strong> donne une version du calendrier plus proche du mouvement réel du soleil. C'est l'option à choisir si tu veux le comportement le plus fidèle à l'idée d'un temps solaire.
+                        </li>
+                        <li>
+                            <strong>Heure avancée :</strong> prend en compte le changement d'heure selon la période de l'année. Quand elle est activée, l'heure affichée suit ce que ton navigateur considère comme l'heure locale ; quand elle est désactivée, on reste sur l'heure universelle.
+                        </li>
+                    </ul>
+                    <p>En pratique, l'idée est de te laisser choisir entre trois repères différents: Paris comme base historique, Greenwich comme repère plus neutre, et le soleil comme référence la plus naturelle. Tu peux aussi garder le comportement actuel si c'est ce qui te semble le plus clair.</p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary class="faq-question">
+                    <span>Quels sont les noms des mois républicains ?</span>
+                    <span class="faq-icon">&#8964;</span>
+                </summary>
+                <div class="faq-answer">
+                    <p><strong>Automne :</strong> Vendémiaire, Brumaire, Frimaire</p>
+                    <p><strong>Hiver :</strong> Nivôse, Pluviôse, Ventôse</p>
+                    <p><strong>Printemps :</strong> Germinal, Floréal, Prairial</p>
+                    <p><strong>Été :</strong> Messidor, Thermidor, Fructidor</p>
+                </div>
+            </details>
+        </div>
+    </div>
+
+    <footer>
+        <span id="footer-text">
+            Créé par <a href="https://github.com/Mubelotix" rel="author">Mubelotix</a> sur <a
+                href="https://github.com/Mubelotix/calendrier-web">Github</a>.
+        </span>
+    </footer>
+
+    <script>
+        function scrollToFAQ() {
+            document.getElementById('faq-section').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+    </script>
+
+    <script type="module">
+        const defaultCalendrierPromise = import('../calendrier_web.js');
+        const solarCalendrierPromise = import('../calendrier_web_solar.js');
+
+        const numDay = document.getElementById('num-day');
+        const month = document.getElementById('month');
+        const numYear = document.getElementById('num-year');
+        const dayName = document.getElementById('day-name');
+        const hour = document.getElementById('hour');
+        const minute = document.getElementById('minute');
+        const second = document.getElementById('second');
+        const decimalTimeToggle = document.getElementById('decimalTime');
+        const parisTimeToggle = document.getElementById('parisTime');
+        const solarTimeToggle = document.getElementById('solarTime');
+        const summerTimeToggle = document.getElementById('summerTime');
+
+        let defaultCalendrier = null;
+        let solarCalendrier = null;
+
+        // Initialize time display structure
+        function initializeTimeDisplay() {
+            [hour, minute, second].forEach(element => {
+                element.innerHTML = '';
+                const digits = ['0', '0'];
+                digits.forEach((digit, index) => {
+                    const digitContainer = document.createElement('span');
+                    digitContainer.className = 'time-digit';
+                    digitContainer.innerHTML = `
+                        <div class="time-digit-inner">
+                            ${Array.from({length: 10}, (_, i) => `<div class="time-digit-value">${i}</div>`).join('')}
+                        </div>
+                    `;
+                    element.appendChild(digitContainer);
+                });
+            });
+        }
+
+        function updateDigit(digitElement, newValue) {
+            const inner = digitElement.querySelector('.time-digit-inner');
+            const currentTransform = inner.style.transform;
+            const currentOffset = currentTransform ? parseInt(currentTransform.match(/-?\d+/)?.[0] || '0') : 0;
+            const targetOffset = -newValue * 1.2; // 1.2em height per digit
+            
+            if (currentOffset !== targetOffset) {
+                inner.style.transform = `translateY(${targetOffset}em)`;
+            }
+        }
+
+        function updateTimeNumber(element, value) {
+            const paddedValue = value.toString().padStart(2, '0');
+            const digits = element.querySelectorAll('.time-digit');
+            
+            for (let i = 0; i < 2; i++) {
+                const digitValue = parseInt(paddedValue[i]);
+                updateDigit(digits[i], digitValue);
+            }
+        }
+
+        function getAdjustedUnixTimestamp() {
+            let unixTimestamp = Math.floor(Date.now() / 1000);
+
+            if (summerTimeToggle.checked) {
+                unixTimestamp -= new Date().getTimezoneOffset() * 60;
+            }
+
+            if (!parisTimeToggle.checked) {
+                unixTimestamp -= 9 * 60 + 21;
+            }
+
+            return unixTimestamp;
+        }
+
+        function getActiveCalendrier() {
+            return solarTimeToggle.checked ? solarCalendrier : defaultCalendrier;
+        }
+
+        function createRepublicanTimestamp(calendrierModule) {
+            return calendrierModule.Timestamp.from_unix(BigInt(getAdjustedUnixTimestamp()));
+        }
+
+        function getDecimalIntervalMs(calendrierModule) {
+            const baseIntervalMs = 1000 * (24 * 60 * 60) / (10 * 100 * 100);
+
+            if (!solarTimeToggle.checked || typeof calendrierModule.get_solar_time_speed_ratio !== 'function') {
+                return baseIntervalMs;
+            }
+
+            const unixTimestamp = BigInt(getAdjustedUnixTimestamp());
+            const ratio = calendrierModule.get_solar_time_speed_ratio(unixTimestamp, 3600);
+
+            if (!Number.isFinite(ratio) || ratio <= 0) {
+                return baseIntervalMs;
+            }
+
+            return baseIntervalMs / ratio;
+        }
+
+        async function updateTime(calendrierModule, timestamp, isDecimalTime = true) {
+            let date = new calendrierModule.DateTime(timestamp);
+
+            // Always display republican date
+            numDay.textContent = date.day.toString();
+            month.textContent = date.month;
+            numYear.textContent = date.year.toString();
+
+            dayName.textContent = `Jour ${date.day_name_with_article}`;
+
+            if (isDecimalTime) {
+                // Display decimal time (republican time)
+                updateTimeNumber(hour, date.hour);
+                updateTimeNumber(minute, date.minute);
+                updateTimeNumber(second, date.second);
+            } else {
+                // Display regular 24-hour time with offset
+                let gregorian = getAdjustedUnixTimestamp();
+                let gregorianDate = new Date(gregorian * 1000);
+                updateTimeNumber(hour, gregorianDate.getUTCHours());
+                updateTimeNumber(minute, gregorianDate.getUTCMinutes());
+                updateTimeNumber(second, gregorianDate.getUTCSeconds());
+            }
+        }
+
+        let currentInterval = null;
+        let timestamp = null;
+
+        async function initializeCalendrierModules() {
+            [defaultCalendrier, solarCalendrier] = await Promise.all([
+                defaultCalendrierPromise,
+                solarCalendrierPromise,
+            ]);
+
+            await Promise.all([
+                defaultCalendrier.default(),
+                solarCalendrier.default(new URL('./calendrier_web_solar_bg.wasm', import.meta.url)),
+            ]);
+        }
+
+        function getCurrentRepublicanTimestamp(calendrierModule) {
+            return createRepublicanTimestamp(calendrierModule);
+        }
+
+        function startDecimalTimeInterval(calendrierModule) {
+            if (currentInterval) {
+                clearInterval(currentInterval);
+            }
+
+            let interval_ms = getDecimalIntervalMs(calendrierModule);
+
+            currentInterval = window.setInterval(async () => {
+                timestamp.seconds += BigInt(1);
+                await updateTime(calendrierModule, timestamp, true);
+            }, interval_ms);
+        }
+
+        function startGregorianTimeInterval(calendrierModule) {
+            if (currentInterval) {
+                clearInterval(currentInterval);
+            }
+            
+            currentInterval = window.setInterval(async () => {
+                timestamp = getCurrentRepublicanTimestamp(calendrierModule);
+                await updateTime(calendrierModule, timestamp, false);
+            }, 1000);
+        }
+
+        async function onSettingsChanged() {
+            const calendrierModule = getActiveCalendrier();
+            timestamp = getCurrentRepublicanTimestamp(calendrierModule);
+                
+            if (decimalTimeToggle.checked) {
+                await updateTime(calendrierModule, timestamp, true);
+                startDecimalTimeInterval(calendrierModule);
+            } else {
+                await updateTime(calendrierModule, timestamp, false);
+                startGregorianTimeInterval(calendrierModule);
+            }
+        }
+
+        async function run() {
+            try {
+                await initializeCalendrierModules();
+            } catch (e) {
+                console.error("Failed to initialize WebAssembly module:", e);
+                alert("Erreur lors du chargement du module WebAssembly. Veuillez réessayer plus tard.");
+                return;
+            }
+
+            // Initialize the time display structure
+            initializeTimeDisplay();
+
+            const calendrierModule = getActiveCalendrier();
+            timestamp = getCurrentRepublicanTimestamp(calendrierModule);
+            
+            // Initial display
+            if (decimalTimeToggle.checked) {
+                await updateTime(calendrierModule, timestamp, true);
+                startDecimalTimeInterval(calendrierModule);
+            } else {
+                await updateTime(calendrierModule, timestamp, false);
+                startGregorianTimeInterval(calendrierModule);
+            }
+
+            // Handle events
+            document.addEventListener('visibilitychange', async () => {
+                if (!document.hidden) {
+                    onSettingsChanged();
+                }
+            });
+            decimalTimeToggle.addEventListener('change', onSettingsChanged);
+            parisTimeToggle.addEventListener('change', onSettingsChanged);
+            solarTimeToggle.addEventListener('change', onSettingsChanged);
+            summerTimeToggle.addEventListener('change', onSettingsChanged);
+        }
+        run();
+    </script>
+
+</body>
+
+</html>
