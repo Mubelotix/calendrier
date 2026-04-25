@@ -5,13 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendrier Républicain</title>
-    <meta name="description" content="Calendrier révolutionnaire français avec heure décimale en temps réel. Découvrez la date républicaine d'aujourd'hui et l'heure décimale selon le système révolutionnaire français.">
-    <meta name="keywords" content="calendrier républicain, calendrier révolutionnaire, heure décimale, temps décimal, révolution française, calendrier français">
+    <meta name="description"
+        content="Calendrier révolutionnaire français avec heure décimale en temps réel. Découvrez la date républicaine d'aujourd'hui et l'heure décimale selon le système révolutionnaire français.">
+    <meta name="keywords"
+        content="calendrier républicain, calendrier révolutionnaire, heure décimale, temps décimal, révolution française, calendrier français">
     <meta name="author" content="Mubelotix">
     <meta name="robots" content="index, follow">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Calendrier Républicain Français - Heure Décimale">
-    <meta property="og:description" content="Calendrier révolutionnaire français avec heure décimale en temps réel. Découvrez la date républicaine d'aujourd'hui et l'heure décimale selon le système révolutionnaire français.">
+    <meta property="og:description"
+        content="Calendrier révolutionnaire français avec heure décimale en temps réel. Découvrez la date républicaine d'aujourd'hui et l'heure décimale selon le système révolutionnaire français.">
     <meta property="og:url" content="https://calendrier.dera.page">
     <!-- <meta property="og:image" content="https://calendrier.dera.page/art.png"> -->
     <meta property="og:locale" content="fr_FR">
@@ -70,7 +73,8 @@
             text-align: center;
         }
 
-        #date, #time {
+        #date,
+        #time {
             font-size: 3rem;
             font-weight: bold;
             margin-block: 2rem;
@@ -124,6 +128,7 @@
             justify-content: center;
         }
     </style>
+    <link rel="stylesheet" href="calendar.css">
     <style>
         #toggles {
             position: absolute;
@@ -190,13 +195,16 @@
         }
     </style>
     <style>
-        .tooltip, .tooltipDown {
+        .tooltip,
+        .tooltipDown {
             position: relative;
             cursor: pointer;
         }
 
-        .tooltip:hover .tooltiptext, .tooltipDown:hover .tooltiptext,
-        .tooltip .tooltiptext:hover, .tooltipDown .tooltiptext:hover {
+        .tooltip:hover .tooltiptext,
+        .tooltipDown:hover .tooltiptext,
+        .tooltip .tooltiptext:hover,
+        .tooltipDown .tooltiptext:hover {
             visibility: visible;
             opacity: 1;
         }
@@ -269,12 +277,19 @@
         }
 
         @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
                 transform: translateX(-50%) translateY(0) rotate(90deg);
             }
+
             40% {
                 transform: translateX(-50%) translateY(-10px) rotate(90deg);
             }
+
             60% {
                 transform: translateX(-50%) translateY(-5px) rotate(90deg);
             }
@@ -384,7 +399,8 @@
                 <input type="checkbox" id="parisTime" class="checkboxInput" checked>
                 <div for="parisTime" class="toggleSwitch"></div>
                 <div class="tooltiptext">
-                    Affiche l'heure comme à Paris. Si tu la désactives, l'affichage s'aligne sur le méridien de Greenwich, souvent pris comme référence mondiale.
+                    Affiche l'heure comme à Paris. Si tu la désactives, l'affichage s'aligne sur le méridien de
+                    Greenwich, souvent pris comme référence mondiale.
                 </div>
             </label>
 
@@ -393,7 +409,8 @@
                 <input type="checkbox" id="solarTime" class="checkboxInput" checked>
                 <div for="solarTime" class="toggleSwitch"></div>
                 <div class="tooltiptext">
-                    Utilise une version du calendrier qui suit le soleil au plus près. Si tu la désactives, tu reviens au calcul normal.
+                    Utilise une version du calendrier qui suit le soleil au plus près. Si tu la désactives, tu reviens
+                    au calcul normal.
                 </div>
             </label>
 
@@ -402,7 +419,8 @@
                 <input type="checkbox" id="summerTime" class="checkboxInput">
                 <div for="summerTime" class="toggleSwitch"></div>
                 <div class="tooltiptext">
-                    Prend en compte le décalage saisonnier de ton navigateur. Si tu la désactives, on garde l'heure universelle.
+                    Prend en compte le décalage saisonnier de ton navigateur. Si tu la désactives, on garde l'heure
+                    universelle.
                 </div>
             </label>
         </div>
@@ -414,27 +432,82 @@
             <h2 id="day-name">-</h2>
 
             <h2 id="time">
-                <span id="hour" class="time-number">--</span>:<span id="minute" class="time-number">--</span>:<span id="second" class="time-number">--</span>
+                <span id="hour" class="time-number">--</span>:<span id="minute" class="time-number">--</span>:<span
+                    id="second" class="time-number">--</span>
             </h2>
         </div>
 
-        <div class="scroll-indicator" onclick="scrollToFAQ()">
+        <div class="scroll-indicator" onclick="scrollToNextSection()">
             &#8250;
         </div>
     </main>
 
+    <div class="calendars-section" id="calendars-section">
+        <h2 class="calendars-title">Convertisseur</h2>
+        <div class="calendars-container">
+            <!-- Gregorian Calendar -->
+            <div class="calendar gregorian" id="gregorian-calendar">
+                <div class="calendar-header">
+                    <button class="calendar-nav-btn" id="greg-prev">&lt;</button>
+                    <h3 id="greg-title">Mois Année</h3>
+                    <button class="calendar-nav-btn" id="greg-next">&gt;</button>
+                </div>
+                <div class="calendar-grid">
+                    <div class="calendar-day-header">Lun</div>
+                    <div class="calendar-day-header">Mar</div>
+                    <div class="calendar-day-header">Mer</div>
+                    <div class="calendar-day-header">Jeu</div>
+                    <div class="calendar-day-header">Ven</div>
+                    <div class="calendar-day-header">Sam</div>
+                    <div class="calendar-day-header">Dim</div>
+                </div>
+                <div class="calendar-view">
+                    <div class="calendar-view-inner" id="greg-grid"></div>
+                </div>
+            </div>
+
+            <!-- Republican Calendar -->
+            <div class="calendar republican" id="republican-calendar">
+                <div class="calendar-header">
+                    <button class="calendar-nav-btn" id="rep-prev">&lt;</button>
+                    <h3 id="rep-title">Mois Année</h3>
+                    <button class="calendar-nav-btn" id="rep-next">&gt;</button>
+                </div>
+                <div class="calendar-grid">
+                    <div class="calendar-day-header">Pri</div>
+                    <div class="calendar-day-header">Duo</div>
+                    <div class="calendar-day-header">Tri</div>
+                    <div class="calendar-day-header">Qua</div>
+                    <div class="calendar-day-header">Qui</div>
+                    <div class="calendar-day-header">Sex</div>
+                    <div class="calendar-day-header">Sep</div>
+                    <div class="calendar-day-header">Oct</div>
+                    <div class="calendar-day-header">Non</div>
+                    <div class="calendar-day-header">Déc</div>
+                </div>
+                <div class="calendar-view">
+                    <div class="calendar-view-inner" id="rep-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="faq-section" id="faq-section">
         <div class="faq-container">
             <h2 class="faq-title">Questions Fréquemment Posées</h2>
-            
+
             <details class="faq-item">
                 <summary class="faq-question">
                     <span>Qu'est-ce que le calendrier républicain ?</span>
                     <span class="faq-icon">&#8964;</span>
                 </summary>
                 <div class="faq-answer">
-                    <p>Le calendrier républicain, aussi appelé calendrier révolutionnaire français, fut créé pendant la Révolution française en 1793. Il est destiné à remplacer le calendrier grégorien et à marquer une rupture avec l'Ancien Régime et l'influence religieuse.</p>
-                    <p>Ce calendrier compte 12 mois de 30 jours chacun, plus 5 ou 6 jours complémentaires. L'année commence à l'équinoxe d'automne (vers le 22 septembre), jour d'anniversaire de la République.</p>
+                    <p>Le calendrier républicain, aussi appelé calendrier révolutionnaire français, fut créé pendant la
+                        Révolution française en 1793. Il est destiné à remplacer le calendrier grégorien et à marquer
+                        une rupture avec l'Ancien Régime et l'influence religieuse.</p>
+                    <p>Ce calendrier compte 12 mois de 30 jours chacun, plus 5 ou 6 jours complémentaires. L'année
+                        commence à l'équinoxe d'automne (vers le 22 septembre), jour d'anniversaire de la République.
+                    </p>
                 </div>
             </details>
 
@@ -444,7 +517,8 @@
                     <span class="faq-icon">&#8964;</span>
                 </summary>
                 <div class="faq-answer">
-                    <p>L'heure décimale divise la journée en 10 heures au lieu de 24. Chaque heure contient 100 minutes décimales, et chaque minute contient 100 secondes décimales.</p>
+                    <p>L'heure décimale divise la journée en 10 heures au lieu de 24. Chaque heure contient 100 minutes
+                        décimales, et chaque minute contient 100 secondes décimales.</p>
                     <p>L'intérêt est de simplifier les calculs de temps et conversions entre les différentes unités.</p>
                 </div>
             </details>
@@ -455,19 +529,29 @@
                     <span class="faq-icon">&#8964;</span>
                 </summary>
                 <div class="faq-answer">
-                    <p>Ces trois options servent à choisir quelle manière d'afficher l'heure te convient le mieux. Elles agissent séparément, donc tu peux en activer une, deux ou trois selon ce que tu veux voir à l'écran.</p>
+                    <p>Ces trois options servent à choisir quelle manière d'afficher l'heure te convient le mieux. Elles
+                        agissent séparément, donc tu peux en activer une, deux ou trois selon ce que tu veux voir à
+                        l'écran.</p>
                     <ul>
                         <li>
-                            <strong>Heure de Paris :</strong> garde l'affichage calé sur Paris, qui est la référence naturelle du calendrier républicain. Si tu la désactives, l'affichage se décale vers Greenwich, ce qui permet de comparer avec une référence plus universelle.
+                            <strong>Heure de Paris :</strong> garde l'affichage calé sur Paris, qui est la référence
+                            naturelle du calendrier républicain. Si tu la désactives, l'affichage se décale vers
+                            Greenwich, ce qui permet de comparer avec une référence plus universelle.
                         </li>
                         <li>
-                            <strong>Temps solaire vrai :</strong> donne une version du calendrier plus proche du mouvement réel du soleil. C'est l'option à choisir si tu veux le comportement le plus fidèle à l'idée d'un temps solaire.
+                            <strong>Temps solaire vrai :</strong> donne une version du calendrier plus proche du
+                            mouvement réel du soleil. C'est l'option à choisir si tu veux le comportement le plus fidèle
+                            à l'idée d'un temps solaire.
                         </li>
                         <li>
-                            <strong>Heure avancée :</strong> prend en compte le changement d'heure selon la période de l'année. Quand elle est activée, l'heure affichée suit ce que ton navigateur considère comme l'heure locale ; quand elle est désactivée, on reste sur l'heure universelle.
+                            <strong>Heure avancée :</strong> prend en compte le changement d'heure selon la période de
+                            l'année. Quand elle est activée, l'heure affichée suit ce que ton navigateur considère comme
+                            l'heure locale ; quand elle est désactivée, on reste sur l'heure universelle.
                         </li>
                     </ul>
-                    <p>En pratique, l'idée est de te laisser choisir entre trois repères différents: Paris comme base historique, Greenwich comme repère plus neutre, et le soleil comme référence la plus naturelle. Tu peux aussi garder le comportement actuel si c'est ce qui te semble le plus clair.</p>
+                    <p>En pratique, l'idée est de te laisser choisir entre trois repères différents: Paris comme base
+                        historique, Greenwich comme repère plus neutre, et le soleil comme référence la plus naturelle.
+                        Tu peux aussi garder le comportement actuel si c'est ce qui te semble le plus clair.</p>
                 </div>
             </details>
 
@@ -494,8 +578,8 @@
     </footer>
 
     <script>
-        function scrollToFAQ() {
-            document.getElementById('faq-section').scrollIntoView({
+        function scrollToNextSection() {
+            document.getElementById('calendars-section').scrollIntoView({
                 behavior: 'smooth'
             });
         }
@@ -530,7 +614,7 @@
                     digitContainer.className = 'time-digit';
                     digitContainer.innerHTML = `
                         <div class="time-digit-inner">
-                            ${Array.from({length: 10}, (_, i) => `<div class="time-digit-value">${i}</div>`).join('')}
+                            ${Array.from({ length: 10 }, (_, i) => `<div class="time-digit-value">${i}</div>`).join('')}
                         </div>
                     `;
                     element.appendChild(digitContainer);
@@ -543,7 +627,7 @@
             const currentTransform = inner.style.transform;
             const currentOffset = currentTransform ? parseInt(currentTransform.match(/-?\d+/)?.[0] || '0') : 0;
             const targetOffset = -newValue * 1.2; // 1.2em height per digit
-            
+
             if (currentOffset !== targetOffset) {
                 inner.style.transform = `translateY(${targetOffset}em)`;
             }
@@ -552,7 +636,7 @@
         function updateTimeNumber(element, value) {
             const paddedValue = value.toString().padStart(2, '0');
             const digits = element.querySelectorAll('.time-digit');
-            
+
             for (let i = 0; i < 2; i++) {
                 const digitValue = parseInt(paddedValue[i]);
                 updateDigit(digits[i], digitValue);
@@ -659,7 +743,7 @@
             if (currentInterval) {
                 clearInterval(currentInterval);
             }
-            
+
             currentInterval = window.setInterval(async () => {
                 timestamp = getCurrentRepublicanTimestamp(calendrierModule);
                 await updateTime(calendrierModule, timestamp, false);
@@ -669,7 +753,7 @@
         async function onSettingsChanged() {
             const calendrierModule = getActiveCalendrier();
             timestamp = getCurrentRepublicanTimestamp(calendrierModule);
-                
+
             if (decimalTimeToggle.checked) {
                 await updateTime(calendrierModule, timestamp, true);
                 startDecimalTimeInterval(calendrierModule);
@@ -693,7 +777,7 @@
 
             const calendrierModule = getActiveCalendrier();
             timestamp = getCurrentRepublicanTimestamp(calendrierModule);
-            
+
             // Initial display
             if (decimalTimeToggle.checked) {
                 await updateTime(calendrierModule, timestamp, true);
@@ -714,6 +798,268 @@
             solarTimeToggle.addEventListener('change', onSettingsChanged);
             summerTimeToggle.addEventListener('change', onSettingsChanged);
         }
+        // Dual Calendar System Logic
+        let selectedUnixTs = Math.floor(Date.now() / 1000);
+        let initDate = new Date(selectedUnixTs * 1000);
+        initDate.setUTCHours(12, 0, 0, 0);
+        selectedUnixTs = Math.floor(initDate.getTime() / 1000);
+
+        let gregViewingYear = initDate.getUTCFullYear();
+        let gregViewingMonth = initDate.getUTCMonth();
+
+        let repViewingYear = 1;
+        let repViewingMonth = 1;
+        let repViewingMonthName = "";
+
+        const monthNamesFr = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+
+        function syncRepViewingToTs(ts) {
+            const calendrierModule = getActiveCalendrier();
+            let repTimestamp = calendrierModule.Timestamp.from_unix(BigInt(ts));
+            let repDate = new calendrierModule.DateTime(repTimestamp);
+            repViewingYear = Number(repDate.year);
+            repViewingMonth = Number(repDate.num_month);
+            repViewingMonthName = repDate.month;
+        }
+
+        function syncGregViewingToTs(ts) {
+            let greg = new Date(ts * 1000);
+            gregViewingYear = greg.getUTCFullYear();
+            gregViewingMonth = greg.getUTCMonth();
+        }
+
+        function createDayElement(text, ts, isSelected, calType) {
+            const el = document.createElement('div');
+            el.className = 'calendar-day';
+            if (typeof text === 'string' && text === '') {
+                // empty
+            } else {
+                el.textContent = text;
+            }
+            if (ts !== null) {
+                el.dataset.ts = ts;
+                el.dataset.type = calType;
+                if (isSelected) {
+                    el.classList.add('active');
+                }
+            } else {
+                el.classList.add('empty');
+            }
+            return el;
+        }
+
+        function renderGregorianCalendar() {
+            const title = document.getElementById('greg-title');
+            title.textContent = `${monthNamesFr[gregViewingMonth]} ${gregViewingYear}`;
+
+            const grid = document.getElementById('greg-grid');
+            grid.innerHTML = '';
+
+            let firstDay = new Date(Date.UTC(gregViewingYear, gregViewingMonth, 1));
+            let dayOfWeek = firstDay.getUTCDay() || 7; // Monday = 1, Sunday = 7
+            dayOfWeek -= 1; // 0-indexed for the grid where Mon=0
+
+            // Empty days
+            for (let i = 0; i < dayOfWeek; i++) {
+                grid.appendChild(createDayElement('', null, false, 'greg'));
+            }
+
+            // Days of the month
+            let daysInMonth = new Date(Date.UTC(gregViewingYear, gregViewingMonth + 1, 0)).getUTCDate();
+            for (let d = 1; d <= daysInMonth; d++) {
+                let currentDay = new Date(Date.UTC(gregViewingYear, gregViewingMonth, d, 12, 0, 0));
+                let ts = Math.floor(currentDay.getTime() / 1000);
+
+                let selDate = new Date(selectedUnixTs * 1000);
+                let isSelected = (selDate.getUTCFullYear() === currentDay.getUTCFullYear() && selDate.getUTCMonth() === currentDay.getUTCMonth() && selDate.getUTCDate() === currentDay.getUTCDate());
+
+                grid.appendChild(createDayElement(d, ts, isSelected, 'greg'));
+            }
+        }
+
+        function renderRepublicanCalendar() {
+            const title = document.getElementById('rep-title');
+            title.textContent = `${repViewingMonthName || ''} ${repViewingYear}`;
+
+            const grid = document.getElementById('rep-grid');
+            grid.innerHTML = '';
+
+            const calendrierModule = getActiveCalendrier();
+
+            for (let d = 1; d <= 36; d++) {
+                let dt;
+                try {
+                    dt = calendrierModule.DateTime.from_ymd_hms(BigInt(repViewingYear), BigInt(repViewingMonth), BigInt(d), BigInt(5), BigInt(0), BigInt(0));
+                } catch (e) {
+                    break;
+                }
+
+                if (Number(dt.num_month) !== repViewingMonth) {
+                    // Complementary days don't change month, they are month 13, so this is valid.
+                    // If it's another month, break.
+                    break;
+                }
+
+                let ts = Number(dt.timestamp.unix());
+                let isSelected = false;
+
+                let selDt = new calendrierModule.DateTime(calendrierModule.Timestamp.from_unix(BigInt(selectedUnixTs)));
+                if (Number(selDt.year) === repViewingYear && Number(selDt.num_month) === repViewingMonth && Number(selDt.day) === d) {
+                    isSelected = true;
+                }
+
+                grid.appendChild(createDayElement(d, ts, isSelected, 'rep'));
+            }
+        }
+
+        function animateCalendarChange(gridId, direction, renderFn) {
+            const inner = document.getElementById(gridId);
+            inner.style.transition = 'none';
+            inner.style.transform = `translateX(${direction > 0 ? '20px' : '-20px'})`;
+            inner.style.opacity = '0';
+
+            setTimeout(() => {
+                renderFn();
+                inner.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+                inner.style.transform = 'translateX(0)';
+                inner.style.opacity = '1';
+                setupHoverSync();
+            }, 50);
+        }
+
+        document.getElementById('greg-prev').addEventListener('click', () => {
+            gregViewingMonth--;
+            if (gregViewingMonth < 0) {
+                gregViewingMonth = 11;
+                gregViewingYear--;
+            }
+            animateCalendarChange('greg-grid', -1, renderGregorianCalendar);
+        });
+
+        document.getElementById('greg-next').addEventListener('click', () => {
+            gregViewingMonth++;
+            if (gregViewingMonth > 11) {
+                gregViewingMonth = 0;
+                gregViewingYear++;
+            }
+            animateCalendarChange('greg-grid', 1, renderGregorianCalendar);
+        });
+
+        document.getElementById('rep-prev').addEventListener('click', () => {
+            repViewingMonth--;
+            if (repViewingMonth < 1) {
+                repViewingMonth = 13;
+                repViewingYear--;
+            }
+            try {
+                const dt = getActiveCalendrier().DateTime.from_ymd_hms(BigInt(repViewingYear), BigInt(repViewingMonth), BigInt(1), BigInt(5), BigInt(0), BigInt(0));
+                repViewingMonthName = dt.month;
+            } catch (e) { }
+            animateCalendarChange('rep-grid', -1, renderRepublicanCalendar);
+        });
+
+        document.getElementById('rep-next').addEventListener('click', () => {
+            repViewingMonth++;
+            if (repViewingMonth > 13) {
+                repViewingMonth = 1;
+                repViewingYear++;
+            }
+            try {
+                const dt = getActiveCalendrier().DateTime.from_ymd_hms(BigInt(repViewingYear), BigInt(repViewingMonth), BigInt(1), BigInt(5), BigInt(0), BigInt(0));
+                repViewingMonthName = dt.month;
+            } catch (e) { }
+            animateCalendarChange('rep-grid', 1, renderRepublicanCalendar);
+        });
+
+        function setupHoverSync() {
+            document.querySelectorAll('.calendar-day').forEach(el => {
+                el.addEventListener('mouseenter', (e) => {
+                    const ts = e.target.dataset.ts;
+                    if (!ts) return;
+                    e.target.classList.add('hover-sync');
+                    const type = e.target.dataset.type;
+                    const otherType = type === 'greg' ? 'rep' : 'greg';
+                    const targetDate = new Date(ts * 1000);
+
+                    let foundMatch = false;
+                    const targets = Array.from(document.querySelectorAll(`.calendar-day[data-type="${otherType}"]`));
+                    
+                    targets.forEach(otherEl => {
+                        const otherTs = otherEl.dataset.ts;
+                        if (!otherTs) return;
+                        
+                        const od = new Date(otherTs * 1000);
+                        if (od.getUTCFullYear() === targetDate.getUTCFullYear() && 
+                            od.getUTCMonth() === targetDate.getUTCMonth() && 
+                            od.getUTCDate() === targetDate.getUTCDate()) {
+                            otherEl.classList.add('hover-sync');
+                            foundMatch = true;
+                        }
+                    });
+
+                    if (!foundMatch) {
+                        const validCells = targets.filter(t => t.dataset.ts);
+                        if (validCells.length > 0) {
+                            const firstTs = parseInt(validCells[0].dataset.ts, 10);
+                            const lastTs = parseInt(validCells[validCells.length - 1].dataset.ts, 10);
+                            const numericTs = parseInt(ts, 10);
+                            
+                            if (numericTs < firstTs) {
+                                document.getElementById(`${otherType}-prev`).classList.add('hover-sync-arrow');
+                            } else if (numericTs > lastTs) {
+                                document.getElementById(`${otherType}-next`).classList.add('hover-sync-arrow');
+                            }
+                        }
+                    }
+                });
+
+                el.addEventListener('mouseleave', () => {
+                    document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('hover-sync'));
+                    document.querySelectorAll('.calendar-nav-btn').forEach(btn => btn.classList.remove('hover-sync-arrow'));
+                });
+
+                el.addEventListener('click', (e) => {
+                    const ts = e.target.closest('.calendar-day')?.dataset.ts;
+                    if (!ts) return;
+                    selectedUnixTs = parseInt(ts, 10);
+
+                    const type = e.target.closest('.calendar-day').dataset.type;
+                    if (type === 'greg') {
+                        const prevRepYear = repViewingYear, prevRepMonth = repViewingMonth;
+                        syncRepViewingToTs(selectedUnixTs);
+                        if (repViewingYear !== prevRepYear || repViewingMonth !== prevRepMonth) {
+                            const dir = (repViewingYear > prevRepYear || (repViewingYear === prevRepYear && repViewingMonth > prevRepMonth)) ? 1 : -1;
+                            animateCalendarChange('rep-grid', dir, renderRepublicanCalendar);
+                        } else {
+                            renderRepublicanCalendar();
+                        }
+                        renderGregorianCalendar();
+                    } else {
+                        const prevGregYear = gregViewingYear, prevGregMonth = gregViewingMonth;
+                        syncGregViewingToTs(selectedUnixTs);
+                        if (gregViewingYear !== prevGregYear || gregViewingMonth !== prevGregMonth) {
+                            const dir = (gregViewingYear > prevGregYear || (gregViewingYear === prevGregYear && gregViewingMonth > prevGregMonth)) ? 1 : -1;
+                            animateCalendarChange('greg-grid', dir, renderGregorianCalendar);
+                        } else {
+                            renderGregorianCalendar();
+                        }
+                        renderRepublicanCalendar();
+                    }
+                    setupHoverSync();
+                });
+            });
+        }
+
+        const originalRun = run;
+        run = async function () {
+            await originalRun();
+
+            syncRepViewingToTs(selectedUnixTs);
+            renderGregorianCalendar();
+            renderRepublicanCalendar();
+            setupHoverSync();
+        };
+
         run();
     </script>
 
