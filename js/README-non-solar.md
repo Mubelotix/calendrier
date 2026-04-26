@@ -1,10 +1,10 @@
-# calendrier
+# calendrier-mt
 
 Crate for handling dates in the french Revolutionary calendar.
 
 This package is a wrapper over the [Rust `calendrier` implementation](https://github.com/Mubelotix/calendrier) that can run using WASM in the browser or Node.js.
 
-**Note:** This package has apparent solar time **disabled** and uses mean time by default to provide stable second durations. If you value strict historical accuracy, please use the [solar version (`@mubelotix/calendrier-solar`)](https://www.npmjs.com/package/@mubelotix/calendrier-solar).
+**Note:** This package has apparent solar time **disabled** and uses mean time by default to provide stable second durations. If you value strict historical accuracy, please use the [solar version (`@mubelotix/calendrier`)](https://www.npmjs.com/package/@mubelotix/calendrier).
 
 This is the most precise and correct implementation of the Republican calendar in the world. While most libraries approximate dates using the never-adopted Romme reform or fixed leap-year rules, this crate uses high-precision astronomical calculations to adhere strictly to the original law of the Convention.
 
@@ -14,7 +14,7 @@ While the underlying Rust library can compute precise astronomical times using t
 
 Because apparent solar time length variations can complicate digital systems, Mean Time ensures consistent, stable second durations for applications that prioritize steady time intervals over strict astronomical adherence.
 
-Due to the complexity of non-linear time, the strict solar time implementation is provided in a separate package (`@mubelotix/calendrier-solar`).
+Due to the complexity of non-linear time, the strict solar time implementation is provided in a separate package (`@mubelotix/calendrier`).
 
 Our base equinox calculations are still rigorously validated to ensure correct date rollovers:
 - **Accuracy**: Our calendar dates are highly accurate, avoiding the one-day off errors found in many alternatives that rely on fixed leap-year rules.
@@ -27,7 +27,7 @@ The equinox dates [were collected and computed](https://www.imcce.fr/newsletter/
 ## Usage
 
 ```javascript
-import { DateTime } from '@mubelotix/calendrier';
+import { DateTime } from '@mubelotix/calendrier-mt';
 
 let date = DateTime.from_ymd(1, 1, 1); // Calendar starts on september 22nd, 1792
 let date_fmt = date.to_string();

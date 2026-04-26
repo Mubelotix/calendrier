@@ -23,8 +23,8 @@ cp -a pkg pkg-solar
 rm -rf pkg
 mv "$tmp_dir/pkg-default" pkg
 
-set_pkg_name pkg "@mubelotix/calendrier"
-set_pkg_name pkg-solar "@mubelotix/calendrier-solar"
+set_pkg_name pkg "calendrier-mt"
+set_pkg_name pkg-solar "calendrier"
 
 ln -sfn ../js/pkg/calendrier_web.js ../web/calendrier_web.js
 ln -sfn ../js/pkg/calendrier_web_bg.wasm ../web/calendrier_web_bg.wasm

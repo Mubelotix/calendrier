@@ -4,7 +4,7 @@ Crate for handling dates in the french Revolutionary calendar.
 
 This package is a wrapper over the [Rust `calendrier` implementation](https://github.com/Mubelotix/calendrier) that can run using WASM in the browser or Node.js.
 
-**Note:** This package has apparent solar time **enabled** for maximum historical accuracy. If you want to use mean time instead for stable second durations, please use the [non-solar version (`@mubelotix/calendrier`)](https://www.npmjs.com/package/@mubelotix/calendrier).
+**Note:** This package has apparent solar time **enabled** for maximum historical accuracy. If you want to use mean time instead for stable second durations, please use the [non-solar version (`@mubelotix/calendrier-mt`)](https://www.npmjs.com/package/@mubelotix/calendrier-mt).
 
 This is the most precise and correct implementation of the Republican calendar in the world. While most libraries approximate dates using the never-adopted Romme reform or fixed leap-year rules, this crate uses high-precision astronomical calculations to adhere strictly to the original law of the Convention.
 
@@ -14,7 +14,7 @@ To achieve historical truth, we leverage the [NOVAS (Naval Observatory Vector As
 
 Without accounting for the Equation of Time, errors in equinox transitions can exceed 20 minutes, leading to incorrect date rollovers. Because apparent solar time is based on the actual position of the sun, the length of a "day" varies slightly throughout the year; consequently, **not every Republican second contains the same amount of SI time when this mode is active**.
 
-Due to the complexity of non-linear time, the solar time implementation is provided in this package. For a non-solar option, the base package (`@mubelotix/calendrier`) uses Mean Time to ensure consistent second durations for applications that prioritize stable time intervals over strict astronomical adherence.
+Due to the complexity of non-linear time, the solar time implementation is provided in this package. For a non-solar option, the base package (`@mubelotix/calendrier-mt`) uses Mean Time to ensure consistent second durations for applications that prioritize stable time intervals over strict astronomical adherence.
 
 Our implementation has been rigorously validated against historical records:
 - **Accuracy**: Our results match precise event timings from the pivotal years 1792 and 1793 with an accuracy better than 90 seconds, far better than alernatives, most of which are off by a day, and the best of them being off by 15 minutes.
@@ -27,7 +27,7 @@ The equinoxe dates [were collected and computed](https://www.imcce.fr/newsletter
 ## Usage
 
 ```javascript
-import { DateTime } from '@mubelotix/calendrier-solar';
+import { DateTime } from '@mubelotix/calendrier';
 
 let date = DateTime.from_ymd(1, 1, 1); // Calendar starts on september 22nd, 1792
 let date_fmt = date.to_string();
