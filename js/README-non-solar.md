@@ -4,7 +4,7 @@ Crate for handling dates in the french Revolutionary calendar.
 
 This package is a wrapper over the [Rust `calendrier` implementation](https://github.com/Mubelotix/calendrier) that can run using WASM in the browser or Node.js.
 
-**Note:** This package has apparent solar time **disabled** and uses mean time by default to provide stable second durations. If you value strict historical accuracy, please use the [solar version (`@mubelotix/calendrier`)](https://www.npmjs.com/package/@mubelotix/calendrier).
+**Note:** This package has apparent solar time **disabled** and uses mean time by default to provide stable second durations. If you value strict historical accuracy, please use the [solar version (`calendrier`)](https://www.npmjs.com/package/calendrier).
 
 This is the most precise and correct implementation of the Republican calendar in the world. While most libraries approximate dates using the never-adopted Romme reform or fixed leap-year rules, this crate uses high-precision astronomical calculations to adhere strictly to the original law of the Convention.
 
@@ -14,7 +14,7 @@ While the underlying Rust library can compute precise astronomical times using t
 
 Because apparent solar time length variations can complicate digital systems, Mean Time ensures consistent, stable second durations for applications that prioritize steady time intervals over strict astronomical adherence.
 
-Due to the complexity of non-linear time, the strict solar time implementation is provided in a separate package (`@mubelotix/calendrier`).
+Due to the complexity of non-linear time, the strict solar time implementation is provided in a separate package (`calendrier`).
 
 Our base equinox calculations are still rigorously validated to ensure correct date rollovers:
 - **Accuracy**: Our calendar dates are highly accurate, avoiding the one-day off errors found in many alternatives that rely on fixed leap-year rules.
@@ -31,7 +31,7 @@ The equinox dates [were collected and computed](https://www.imcce.fr/newsletter/
 ### Browser
 
 ```javascript
-import init, { DateTime } from '@mubelotix/calendrier-mt';
+import init, { DateTime } from 'calendrier-mt';
 
 await init();
 
@@ -51,10 +51,10 @@ The package targets the browser (WASM is loaded via `fetch`), so in Node.js you 
 ```javascript
 import { readFileSync } from 'fs';
 import { createRequire } from 'module';
-import init, { DateTime } from '@mubelotix/calendrier-mt';
+import init, { DateTime } from 'calendrier-mt';
 
 const require = createRequire(import.meta.url);
-const wasm = readFileSync(require.resolve('@mubelotix/calendrier-mt/calendrier_web_bg.wasm'));
+const wasm = readFileSync(require.resolve('calendrier-mt/calendrier_web_bg.wasm'));
 await init({ module_or_path: wasm });
 
 const date = DateTime.from_ymd(1n, 1n, 1n);

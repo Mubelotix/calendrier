@@ -12,6 +12,4 @@ There must be a README.md in all of these folders, and one at root.
 - ./web/README.md - Focuses on features, not usage. Should state it's built on the Rust library and link to it.
 - ./README.md - Sums most of the specific readmes, excluding tips for contributing/building/running. Should include both JS and Rust examples and state that there is a website. 
 
-Note: npm packages are published under the scope `mubelotix`.
-
 READMEs should be kept up-to-date and always follow these guidelines. Not every detail of the implementation belongs to them though, avoid over-complicating them. They should be kept rather simple and engaging.
