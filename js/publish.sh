@@ -14,5 +14,10 @@ fi
 cp README-non-solar.md ./pkg/README.md
 cp README.md ./pkg-solar/README.md
 
+if ! npm whoami > /dev/null 2>&1; then
+	echo "Error: You are not logged in to npm. Please run 'npm login' first."
+	exit 1
+fi
+
 npm publish --access public $DRY_RUN ./pkg
 npm publish --access public $DRY_RUN ./pkg-solar
