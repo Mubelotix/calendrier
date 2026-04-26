@@ -1,6 +1,6 @@
 /* calendar.css */
 .calendars-section {
-    padding: 4rem 2rem 0 2rem;
+    padding-top: 4rem;
     background-color: var(--background-200);
     display: flex;
     flex-direction: column;
@@ -17,6 +17,7 @@
 
 .calendars-container {
     display: flex;
+    max-width: 100%;
     flex-wrap: wrap;
     gap: 3rem;
     align-items: flex-start;
@@ -147,5 +148,5 @@
 }
 
 .calendar-view {
-    overflow: hidden;
+    overflow: scroll hidden;
 }
