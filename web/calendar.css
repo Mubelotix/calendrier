@@ -1,12 +1,12 @@
 /* calendar.css */
 .calendars-section {
-    padding: 4rem 2rem;
+    padding: max(10vh, 4rem) 2rem 4rem 2rem;
     background-color: var(--background-200);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .calendars-title {
@@ -29,6 +29,7 @@
     border-radius: 1rem;
     padding: 1.5rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
 .calendar-header {
@@ -36,6 +37,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
+    overflow: hidden;
 }
 
 .calendar-header h3 {

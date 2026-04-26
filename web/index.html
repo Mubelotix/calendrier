@@ -128,7 +128,7 @@
             justify-content: center;
         }
     </style>
-    <link rel="stylesheet" href="calendar.css">
+    <link rel="stylesheet" href="calendar.css?v=2">
     <style>
         #toggles {
             position: absolute;
@@ -376,6 +376,93 @@
         .faq-answer a:hover {
             text-decoration: underline;
         }
+    </style>
+    <style>
+        /* ── View Transitions for the calendar converter ────────────────────── */
+
+        /* Assign stable names to the four animated elements via utility classes */
+        .vt-greg-grid { view-transition-name: greg-grid;  }
+        .vt-greg-title{ view-transition-name: greg-title; }
+        .vt-rep-grid  { view-transition-name: rep-grid;   }
+        .vt-rep-title { view-transition-name: rep-title;  }
+
+        /* Assign names to the cards so they automatically animate their height */
+        .vt-greg-card { view-transition-name: greg-card;  }
+        .vt-rep-card  { view-transition-name: rep-card;   }
+
+        /* Suppress the full-page root cross-fade */
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+            animation: none;
+        }
+
+        /* Clip slides to the element's actual bounds */
+        ::view-transition-image-pair(greg-grid),
+        ::view-transition-image-pair(greg-title),
+        ::view-transition-image-pair(rep-grid),
+        ::view-transition-image-pair(rep-title) {
+            isolation: auto;
+            overflow: hidden;
+        }
+
+        /* Pure translate keyframes (no opacity) */
+        @keyframes vt-exit-left  { to   { transform: translateX(-100%); } }
+        @keyframes vt-enter-right{ from { transform: translateX(100%);  } }
+        @keyframes vt-exit-right { to   { transform: translateX(100%);  } }
+        @keyframes vt-enter-left { from { transform: translateX(-100%); } }
+
+        /* Forward - Make sure there is NO SPACE between :root[...] and ::view-transition */
+        :root[data-cal-dir="forward"]::view-transition-old(greg-grid),
+        :root[data-cal-dir="forward"]::view-transition-old(greg-title),
+        :root[data-cal-dir="forward"]::view-transition-old(rep-grid),
+        :root[data-cal-dir="forward"]::view-transition-old(rep-title) {
+            animation: vt-exit-left 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+        :root[data-cal-dir="forward"]::view-transition-new(greg-grid),
+        :root[data-cal-dir="forward"]::view-transition-new(greg-title),
+        :root[data-cal-dir="forward"]::view-transition-new(rep-grid),
+        :root[data-cal-dir="forward"]::view-transition-new(rep-title) {
+            animation: vt-enter-right 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+
+        /* Backward */
+        :root[data-cal-dir="backward"]::view-transition-old(greg-grid),
+        :root[data-cal-dir="backward"]::view-transition-old(greg-title),
+        :root[data-cal-dir="backward"]::view-transition-old(rep-grid),
+        :root[data-cal-dir="backward"]::view-transition-old(rep-title) {
+            animation: vt-exit-right 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+        :root[data-cal-dir="backward"]::view-transition-new(greg-grid),
+        :root[data-cal-dir="backward"]::view-transition-new(greg-title),
+        :root[data-cal-dir="backward"]::view-transition-new(rep-grid),
+        :root[data-cal-dir="backward"]::view-transition-new(rep-title) {
+            animation: vt-enter-left 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+
+        /* Prevent the browser's default cross-fade blending and keep card background fixed to top */
+        ::view-transition-old(greg-grid),
+        ::view-transition-new(greg-grid),
+        ::view-transition-old(greg-title),
+        ::view-transition-new(greg-title),
+        ::view-transition-old(rep-grid),
+        ::view-transition-new(rep-grid),
+        ::view-transition-old(rep-title),
+        ::view-transition-new(rep-title) {
+            mix-blend-mode: normal;
+        }
+
+        ::view-transition-old(greg-card),
+        ::view-transition-new(greg-card),
+        ::view-transition-old(rep-card),
+        ::view-transition-new(rep-card) {
+            mix-blend-mode: normal;
+            height: 100%;
+            width: 100%;
+            object-fit: none;
+            object-position: top center;
+        }
+
+        .calendar-view-inner { transition: none !important; }
     </style>
 </head>
 
@@ -912,63 +999,80 @@
             }
         }
 
-        function animateCalendarChange(gridId, direction, renderFn) {
-            const inner = document.getElementById(gridId);
-            inner.style.transition = 'none';
-            inner.style.transform = `translateX(${direction > 0 ? '20px' : '-20px'})`;
-            inner.style.opacity = '0';
-
-            setTimeout(() => {
+        function animateCalendarChange(direction, target, renderFn) {
+            if (direction === 0 || !document.startViewTransition) {
+                // Skips transition if staying in same month, or as fallback
+                delete document.documentElement.dataset.calDir;
                 renderFn();
-                inner.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-                inner.style.transform = 'translateX(0)';
-                inner.style.opacity = '1';
                 setupHoverSync();
-            }, 50);
+                return;
+            }
+
+            document.documentElement.dataset.calDir = direction > 0 ? 'forward' : 'backward';
+
+            // Selectively add the view-transition-name classes to only the target calendar(s)
+            const addTargetClasses = () => {
+                if (target === 'greg' || target === 'both') {
+                    document.getElementById('gregorian-calendar').classList.add('vt-greg-card');
+                    document.getElementById('greg-grid').classList.add('vt-greg-grid');
+                    document.getElementById('greg-title').classList.add('vt-greg-title');
+                }
+                if (target === 'rep' || target === 'both') {
+                    document.getElementById('republican-calendar').classList.add('vt-rep-card');
+                    document.getElementById('rep-grid').classList.add('vt-rep-grid');
+                    document.getElementById('rep-title').classList.add('vt-rep-title');
+                }
+            };
+
+            const removeTargetClasses = () => {
+                document.getElementById('gregorian-calendar').classList.remove('vt-greg-card');
+                document.getElementById('greg-grid').classList.remove('vt-greg-grid');
+                document.getElementById('greg-title').classList.remove('vt-greg-title');
+                document.getElementById('republican-calendar').classList.remove('vt-rep-card');
+                document.getElementById('rep-grid').classList.remove('vt-rep-grid');
+                document.getElementById('rep-title').classList.remove('vt-rep-title');
+            };
+
+            addTargetClasses();
+
+            const t = document.startViewTransition(() => renderFn());
+            t.finished.then(() => {
+                delete document.documentElement.dataset.calDir;
+                removeTargetClasses();
+                setupHoverSync();
+            });
         }
 
         document.getElementById('greg-prev').addEventListener('click', () => {
             gregViewingMonth--;
-            if (gregViewingMonth < 0) {
-                gregViewingMonth = 11;
-                gregViewingYear--;
-            }
-            animateCalendarChange('greg-grid', -1, renderGregorianCalendar);
+            if (gregViewingMonth < 0) { gregViewingMonth = 11; gregViewingYear--; }
+            animateCalendarChange(-1, 'greg', renderGregorianCalendar);
         });
 
         document.getElementById('greg-next').addEventListener('click', () => {
             gregViewingMonth++;
-            if (gregViewingMonth > 11) {
-                gregViewingMonth = 0;
-                gregViewingYear++;
-            }
-            animateCalendarChange('greg-grid', 1, renderGregorianCalendar);
+            if (gregViewingMonth > 11) { gregViewingMonth = 0; gregViewingYear++; }
+            animateCalendarChange(1, 'greg', renderGregorianCalendar);
         });
 
         document.getElementById('rep-prev').addEventListener('click', () => {
             repViewingMonth--;
-            if (repViewingMonth < 1) {
-                repViewingMonth = 13;
-                repViewingYear--;
-            }
+            if (repViewingMonth < 1) { repViewingMonth = 13; repViewingYear--; }
             try {
                 const dt = getActiveCalendrier().DateTime.from_ymd_hms(BigInt(repViewingYear), BigInt(repViewingMonth), BigInt(1), BigInt(5), BigInt(0), BigInt(0));
                 repViewingMonthName = dt.month;
             } catch (e) { }
-            animateCalendarChange('rep-grid', -1, renderRepublicanCalendar);
+            animateCalendarChange(-1, 'rep', renderRepublicanCalendar);
         });
 
         document.getElementById('rep-next').addEventListener('click', () => {
             repViewingMonth++;
-            if (repViewingMonth > 13) {
-                repViewingMonth = 1;
-                repViewingYear++;
-            }
+            if (repViewingMonth > 13) { repViewingMonth = 1; repViewingYear++; }
             try {
                 const dt = getActiveCalendrier().DateTime.from_ymd_hms(BigInt(repViewingYear), BigInt(repViewingMonth), BigInt(1), BigInt(5), BigInt(0), BigInt(0));
                 repViewingMonthName = dt.month;
             } catch (e) { }
-            animateCalendarChange('rep-grid', 1, renderRepublicanCalendar);
+            animateCalendarChange(1, 'rep', renderRepublicanCalendar);
         });
 
         function setupHoverSync() {
@@ -983,14 +1087,14 @@
 
                     let foundMatch = false;
                     const targets = Array.from(document.querySelectorAll(`.calendar-day[data-type="${otherType}"]`));
-                    
+
                     targets.forEach(otherEl => {
                         const otherTs = otherEl.dataset.ts;
                         if (!otherTs) return;
-                        
+
                         const od = new Date(otherTs * 1000);
-                        if (od.getUTCFullYear() === targetDate.getUTCFullYear() && 
-                            od.getUTCMonth() === targetDate.getUTCMonth() && 
+                        if (od.getUTCFullYear() === targetDate.getUTCFullYear() &&
+                            od.getUTCMonth() === targetDate.getUTCMonth() &&
                             od.getUTCDate() === targetDate.getUTCDate()) {
                             otherEl.classList.add('hover-sync');
                             foundMatch = true;
@@ -1003,7 +1107,7 @@
                             const firstTs = parseInt(validCells[0].dataset.ts, 10);
                             const lastTs = parseInt(validCells[validCells.length - 1].dataset.ts, 10);
                             const numericTs = parseInt(ts, 10);
-                            
+
                             if (numericTs < firstTs) {
                                 document.getElementById(`${otherType}-prev`).classList.add('hover-sync-arrow');
                             } else if (numericTs > lastTs) {
@@ -1024,28 +1128,30 @@
                     selectedUnixTs = parseInt(ts, 10);
 
                     const type = e.target.closest('.calendar-day').dataset.type;
+                    let dir = 0;
+
                     if (type === 'greg') {
                         const prevRepYear = repViewingYear, prevRepMonth = repViewingMonth;
                         syncRepViewingToTs(selectedUnixTs);
                         if (repViewingYear !== prevRepYear || repViewingMonth !== prevRepMonth) {
-                            const dir = (repViewingYear > prevRepYear || (repViewingYear === prevRepYear && repViewingMonth > prevRepMonth)) ? 1 : -1;
-                            animateCalendarChange('rep-grid', dir, renderRepublicanCalendar);
-                        } else {
-                            renderRepublicanCalendar();
+                            dir = (repViewingYear > prevRepYear || (repViewingYear === prevRepYear && repViewingMonth > prevRepMonth)) ? 1 : -1;
                         }
-                        renderGregorianCalendar();
                     } else {
                         const prevGregYear = gregViewingYear, prevGregMonth = gregViewingMonth;
                         syncGregViewingToTs(selectedUnixTs);
                         if (gregViewingYear !== prevGregYear || gregViewingMonth !== prevGregMonth) {
-                            const dir = (gregViewingYear > prevGregYear || (gregViewingYear === prevGregYear && gregViewingMonth > prevGregMonth)) ? 1 : -1;
-                            animateCalendarChange('greg-grid', dir, renderGregorianCalendar);
-                        } else {
-                            renderGregorianCalendar();
+                            dir = (gregViewingYear > prevGregYear || (gregViewingYear === prevGregYear && gregViewingMonth > prevGregMonth)) ? 1 : -1;
                         }
-                        renderRepublicanCalendar();
                     }
-                    setupHoverSync();
+
+                    // Perform a single View Transition for the calendar sync
+                    
+                    const target = (type === 'greg') ? 'rep' : 'greg';
+                    
+                    animateCalendarChange(dir, target, () => {
+                        renderGregorianCalendar();
+                        renderRepublicanCalendar();
+                    });
                 });
             });
         }
