@@ -31,11 +31,14 @@ assert_eq!(ts.to_unix(), -5594228280);
 The Javascript port is a WebAssembly wrapper around the Rust implementation.
 
 ```javascript
-import { DateTime } from '@mubelotix/calendrier'; // Or @mubelotix/calendrier-mt for mean time
+import init, { DateTime } from '@mubelotix/calendrier'; // Or @mubelotix/calendrier-mt for mean time
 
-let date = DateTime.from_ymd(1, 1, 1); // Calendar starts on september 22nd, 1792
-console.assert(date.to_string() === "1 Vendémiaire 1");
+await init(); // In Node.js, see the package README for WASM loading instructions
 
-let ts = date.timestamp();
+const date = DateTime.from_ymd(1n, 1n, 1n); // Calendar starts on september 22nd, 1792
+console.log(date.to_string_default());     // "Primidi 1 Vendémiaire 1"
+console.log(date.to_string_traditional()); // "1 Vendémiaire 1"
+
+const ts = date.timestamp();
 console.assert(ts.to_unix() === -5594228280n);
 ```

@@ -26,18 +26,39 @@ The equinoxe dates [were collected and computed](https://www.imcce.fr/newsletter
 
 ## Usage
 
+> **Note:** All year, month, and day arguments are `BigInt` (use the `n` suffix).
+
+### Browser
+
 ```javascript
-import { DateTime } from '@mubelotix/calendrier';
+import init, { DateTime } from '@mubelotix/calendrier';
 
-let date = DateTime.from_ymd(1, 1, 1); // Calendar starts on september 22nd, 1792
-let date_fmt = date.to_string();
-console.assert(date_fmt === "1 Vendémiaire 1");
+await init();
 
-let ts = date.timestamp(); // Convert to timestamp, number of seconds since republican epoch
-console.assert(ts.seconds === 0);
+const date = DateTime.from_ymd(1n, 1n, 1n); // Calendar starts on september 22nd, 1792
+console.log(date.to_string_default());       // "Primidi 1 Vendémiaire 1"
+console.log(date.to_string_traditional());   // "1 Vendémiaire 1"
 
-let ts_unix = ts.to_unix(); // Convert to unix timestamp
-console.assert(ts_unix === -5594228280n);
+const ts = date.timestamp(); // Seconds since republican epoch
+console.assert(ts.seconds === 0n);
+console.assert(ts.to_unix() === -5594228280n);
+```
+
+### Node.js
+
+The package targets the browser (WASM is loaded via `fetch`), so in Node.js you must load the `.wasm` file manually:
+
+```javascript
+import { readFileSync } from 'fs';
+import { createRequire } from 'module';
+import init, { DateTime } from '@mubelotix/calendrier';
+
+const require = createRequire(import.meta.url);
+const wasm = readFileSync(require.resolve('@mubelotix/calendrier/calendrier_web_bg.wasm'));
+await init({ module_or_path: wasm });
+
+const date = DateTime.from_ymd(1n, 1n, 1n);
+console.log(date.to_string_default()); // "Primidi 1 Vendémiaire 1"
 ```
 
 ## Calendar specification
