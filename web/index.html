@@ -375,6 +375,75 @@
         .faq-answer a:hover {
             text-decoration: underline;
         }
+
+        .dev-section {
+            background-color: var(--background-200);
+            color: var(--text);
+            padding: 0 2rem 4rem 2rem;
+            box-sizing: border-box;
+        }
+
+        .dev-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .dev-title {
+            font-size: 2rem;
+            margin: 0 0 1rem 0;
+            color: var(--text);
+        }
+
+        .dev-description {
+            margin: 0 0 1.75rem 0;
+            line-height: 1.6;
+        }
+
+        .dev-cta {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .dev-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.85rem 1.2rem;
+            border-radius: 0.6rem;
+            border: 1px solid var(--primary);
+            background-color: var(--primary);
+            color: #fff;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+        }
+
+        .dev-button:hover {
+            filter: brightness(1.08);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 14px rgba(0, 0, 0, 0.22);
+            text-decoration: none;
+        }
+
+        .dev-button:focus-visible {
+            outline: 2px solid var(--text);
+            outline-offset: 2px;
+        }
+
+        @media (max-width: 640px) {
+            .dev-cta {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .dev-button {
+                width: 100%;
+            }
+        }
     </style>
     <style>
         /* ── View Transitions for the calendar converter ────────────────────── */
@@ -766,6 +835,23 @@
             </details>
         </div>
     </div>
+
+    <section class="dev-section" id="developers-section">
+        <div class="dev-container">
+            <h2 class="dev-title">Intégrez le calendrier à vos projets</h2>
+            <p class="dev-description">
+                Envie d'utiliser l'heure décimale ou nos algorithmes de conversion ? Nos bibliothèques open-source sont disponibles pour Rust et JavaScript/TypeScript.
+            </p>
+            <div class="dev-cta">
+                <a class="dev-button" href="https://crates.io/crates/calendrier" target="_blank" rel="noopener noreferrer">
+                    Library Rust
+                </a>
+                <a class="dev-button" href="https://www.npmjs.com/package/calendrier" target="_blank" rel="noopener noreferrer">
+                    Library JS/TS
+                </a>
+            </div>
+        </div>
+    </section>
 
     <script>
         function scrollToNextSection() {
