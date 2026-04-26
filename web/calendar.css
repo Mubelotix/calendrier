@@ -1,8 +1,7 @@
 /* calendar.css */
 .calendars-section {
-    padding: max(10vh, 4rem) 2rem 4rem 2rem;
+    padding: 4rem 2rem 0 2rem;
     background-color: var(--background-200);
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;

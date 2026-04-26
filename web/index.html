@@ -51,7 +51,7 @@
         body {
             margin: 0;
             padding: 0;
-            height: 100%;
+            min-height: 100%;
         }
 
         body {
@@ -61,7 +61,7 @@
         }
 
         main {
-            height: 100%;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -298,8 +298,7 @@
         /* FAQ Section */
         .faq-section {
             background-color: var(--background-200);
-            padding: 4rem 2rem;
-            min-height: 100%;
+            padding: 1rem 2rem 4rem 2rem;
             box-sizing: border-box;
         }
 
@@ -396,11 +395,13 @@
             animation: none;
         }
 
-        /* Clip slides to the element's actual bounds */
+        /* Clip slides and cards to their actual bounds so they don't bleed during resizing */
         ::view-transition-image-pair(greg-grid),
         ::view-transition-image-pair(greg-title),
         ::view-transition-image-pair(rep-grid),
-        ::view-transition-image-pair(rep-title) {
+        ::view-transition-image-pair(rep-title),
+        ::view-transition-image-pair(greg-card),
+        ::view-transition-image-pair(rep-card) {
             isolation: auto;
             overflow: hidden;
         }
@@ -456,13 +457,27 @@
         ::view-transition-old(rep-card),
         ::view-transition-new(rep-card) {
             mix-blend-mode: normal;
-            height: 100%;
-            width: 100%;
-            object-fit: none;
-            object-position: top center;
         }
 
         .calendar-view-inner { transition: none !important; }
+
+        /* Provide a stable footprint for the animating cards so they don't push the layout */
+        .calendar-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .calendar-wrapper.greg-wrap { min-height: 28rem; }
+        .calendar-wrapper.rep-wrap { min-height: 19rem; }
+
+        ::view-transition-old(greg-card),
+        ::view-transition-new(greg-card),
+        ::view-transition-old(rep-card),
+        ::view-transition-new(rep-card) {
+            mix-blend-mode: normal;
+            object-fit: none;
+            object-position: top center;
+        }
     </style>
 </head>
 
@@ -519,13 +534,20 @@
             <h2 id="day-name">-</h2>
 
             <h2 id="time">
-                <span id="hour" class="time-number">--</span>:<span id="minute" class="time-number">--</span>:<span
-                    id="second" class="time-number">--</span>
+                <span id="hour" class="time-number"></span>:<span id="minute" class="time-number"></span>:<span
+                    id="second" class="time-number"></span>
             </h2>
         </div>
 
+        <footer>
+            <span id="footer-text">
+                Créé par <a href="https://github.com/Mubelotix" rel="author">Mubelotix</a> sur <a
+                    href="https://github.com/Mubelotix/calendrier-web">Github</a>.
+            </span>
+        </footer>
+
         <div class="scroll-indicator" onclick="scrollToNextSection()">
-            &#8250;
+            ›
         </div>
     </main>
 
@@ -533,12 +555,13 @@
         <h2 class="calendars-title">Convertisseur</h2>
         <div class="calendars-container">
             <!-- Gregorian Calendar -->
-            <div class="calendar gregorian" id="gregorian-calendar">
-                <div class="calendar-header">
-                    <button class="calendar-nav-btn" id="greg-prev">&lt;</button>
-                    <h3 id="greg-title">Mois Année</h3>
-                    <button class="calendar-nav-btn" id="greg-next">&gt;</button>
-                </div>
+            <div class="calendar-wrapper greg-wrap">
+                <div class="calendar gregorian" id="gregorian-calendar">
+                    <div class="calendar-header">
+                        <button class="calendar-nav-btn" id="greg-prev">&lt;</button>
+                        <h3 id="greg-title">Mois Année</h3>
+                        <button class="calendar-nav-btn" id="greg-next">&gt;</button>
+                    </div>
                 <div class="calendar-grid">
                     <div class="calendar-day-header">Lun</div>
                     <div class="calendar-day-header">Mar</div>
@@ -552,9 +575,11 @@
                     <div class="calendar-view-inner" id="greg-grid"></div>
                 </div>
             </div>
+            </div> <!-- End greg-wrap -->
 
             <!-- Republican Calendar -->
-            <div class="calendar republican" id="republican-calendar">
+            <div class="calendar-wrapper rep-wrap">
+                <div class="calendar republican" id="republican-calendar">
                 <div class="calendar-header">
                     <button class="calendar-nav-btn" id="rep-prev">&lt;</button>
                     <h3 id="rep-title">Mois Année</h3>
@@ -576,6 +601,7 @@
                     <div class="calendar-view-inner" id="rep-grid"></div>
                 </div>
             </div>
+            </div> <!-- End rep-wrap -->
         </div>
     </div>
 
@@ -657,16 +683,14 @@
         </div>
     </div>
 
-    <footer>
-        <span id="footer-text">
-            Créé par <a href="https://github.com/Mubelotix" rel="author">Mubelotix</a> sur <a
-                href="https://github.com/Mubelotix/calendrier-web">Github</a>.
-        </span>
-    </footer>
-
     <script>
         function scrollToNextSection() {
             document.getElementById('calendars-section').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+        function scrollToFAQ() {
+            document.getElementById('faq-section').scrollIntoView({
                 behavior: 'smooth'
             });
         }
