@@ -912,6 +912,7 @@
         const parisTimeToggle = document.getElementById('parisTime');
         const solarTimeToggle = document.getElementById('solarTime');
         const summerTimeToggle = document.getElementById('summerTime');
+        const PARIS_MEAN_TIME_OFFSET_SECONDS = 9 * 60 + 21;
 
         let defaultCalendrier = null;
         let solarCalendrier = null;
@@ -963,7 +964,27 @@
             }
 
             if (!parisTimeToggle.checked) {
-                unixTimestamp -= 9 * 60 + 21;
+                unixTimestamp -= PARIS_MEAN_TIME_OFFSET_SECONDS;
+            }
+
+            return unixTimestamp;
+        }
+
+        function getGregorianDisplayUnixTimestamp(calendrierModule) {
+            let unixTimestamp = Math.floor(Date.now() / 1000);
+
+            if (summerTimeToggle.checked) {
+                unixTimestamp -= new Date().getTimezoneOffset() * 60;
+            }
+
+            if (parisTimeToggle.checked) {
+                unixTimestamp += PARIS_MEAN_TIME_OFFSET_SECONDS;
+            }
+
+            if (solarTimeToggle.checked && typeof calendrierModule.get_solar_unix_timestamp === 'function') {
+                unixTimestamp = Math.round(
+                    calendrierModule.get_solar_unix_timestamp(BigInt(unixTimestamp))
+                );
             }
 
             return unixTimestamp;
@@ -1011,7 +1032,7 @@
                 updateTimeNumber(second, date.second);
             } else {
                 // Display regular 24-hour time with offset
-                let gregorian = getAdjustedUnixTimestamp();
+                let gregorian = getGregorianDisplayUnixTimestamp(calendrierModule);
                 let gregorianDate = new Date(gregorian * 1000);
                 updateTimeNumber(hour, gregorianDate.getUTCHours());
                 updateTimeNumber(minute, gregorianDate.getUTCMinutes());

@@ -9,6 +9,12 @@ pub use datetime::*;
 
 #[cfg(feature = "solar")]
 #[wasm_bindgen]
+pub fn get_solar_unix_timestamp(unix_timestamp: i64) -> f64 {
+	calendrier::solar::get_solar_unix_timestamp(unix_timestamp)
+}
+
+#[cfg(feature = "solar")]
+#[wasm_bindgen]
 pub fn get_solar_time_speed_ratio(unix_timestamp: i64, window: usize) -> f64 {
 	calendrier::solar::get_solar_time_speed_ratio(unix_timestamp, window)
 }
