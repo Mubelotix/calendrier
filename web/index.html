@@ -129,7 +129,7 @@
             justify-content: center;
         }
     </style>
-    <link rel="stylesheet" href="calendar.css?v=2">
+    <link rel="stylesheet" href="calendar.css?v=3">
     <style>
         #toggles {
             position: absolute;
@@ -656,7 +656,10 @@
                         <button class="calendar-nav-btn" id="greg-prev">&lt;</button>
                         <h3 id="greg-title">Mois Année</h3>
                         <button class="calendar-nav-btn" id="greg-next">&gt;</button>
-                    </div>
+                </div>
+                <div class="calendar-selected-day" id="greg-selected-day" aria-live="polite">
+                    <span id="greg-selected-saint">-</span>
+                </div>
                 <div class="calendar-grid">
                     <div class="calendar-day-header">Lun</div>
                     <div class="calendar-day-header">Mar</div>
@@ -680,6 +683,7 @@
                     <h3 id="rep-title">Mois Année</h3>
                     <button class="calendar-nav-btn" id="rep-next">&gt;</button>
                 </div>
+                <div class="calendar-selected-day" id="rep-selected-day" aria-live="polite">-</div>
                 <div class="calendar-grid">
                     <div class="calendar-day-header">Pri</div>
                     <div class="calendar-day-header">Duo</div>
@@ -1120,6 +1124,16 @@
         let repViewingMonthName = "";
 
         const monthNamesFr = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+        const ephemerisPromise = fetch('./ephemeris.json').then(response => {
+            if (!response.ok) {
+                throw new Error(`Ephemeris request failed: ${response.status}`);
+            }
+            return response.json();
+        });
+        const gregSelectedDay = document.getElementById('greg-selected-day');
+        const gregSelectedSaint = document.getElementById('greg-selected-saint');
+        const repSelectedDay = document.getElementById('rep-selected-day');
+        let saintRequestId = 0;
 
         function syncRepViewingToTs(ts) {
             const calendrierModule = getActiveCalendrier();
@@ -1134,6 +1148,45 @@
             let greg = new Date(ts * 1000);
             gregViewingYear = greg.getUTCFullYear();
             gregViewingMonth = greg.getUTCMonth();
+        }
+
+        function animateSelectedDay(element) {
+            element.classList.remove('selected-day-changing');
+            void element.offsetWidth;
+            element.classList.add('selected-day-changing');
+        }
+
+        async function updateSelectedDayDetails() {
+            const calendrierModule = getActiveCalendrier();
+            const repTimestamp = calendrierModule.Timestamp.from_unix(BigInt(selectedUnixTs));
+            const repDate = new calendrierModule.DateTime(repTimestamp);
+            repSelectedDay.textContent = `Jour ${repDate.day_name_with_article}`;
+            animateSelectedDay(repSelectedDay);
+
+            const selectedDate = new Date(selectedUnixTs * 1000);
+            const requestId = ++saintRequestId;
+
+            gregSelectedSaint.textContent = 'Chargement...';
+            animateSelectedDay(gregSelectedDay);
+
+            try {
+                const ephemeris = await ephemerisPromise;
+                if (requestId !== saintRequestId) return;
+
+                const year = selectedDate.getUTCFullYear();
+                const dayOfYear = Math.floor(
+                    (selectedDate - Date.UTC(year, 0, 1)) / 86400000
+                );
+                const isLeapYear = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+                const ephemerisIndex = dayOfYear + (!isLeapYear && selectedDate.getUTCMonth() > 1 ? 1 : 0);
+                const [name, title] = ephemeris[ephemerisIndex] || [];
+                gregSelectedSaint.textContent = name ? `${title ? `${title} ` : ''}${name}` : 'Non renseigné';
+                animateSelectedDay(gregSelectedDay);
+            } catch (error) {
+                if (requestId !== saintRequestId) return;
+                gregSelectedSaint.textContent = 'Indisponible';
+                animateSelectedDay(gregSelectedDay);
+            }
         }
 
         function createDayElement(text, ts, isSelected, calType) {
@@ -1385,6 +1438,7 @@
                         renderGregorianCalendar();
                         renderRepublicanCalendar();
                     });
+                    updateSelectedDayDetails();
                 });
             });
         }
@@ -1397,6 +1451,7 @@
             renderGregorianCalendar();
             renderRepublicanCalendar();
             setupHoverSync();
+            await updateSelectedDayDetails();
         };
 
         run();

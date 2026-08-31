@@ -150,3 +150,33 @@
 .calendar-view {
     overflow: scroll hidden;
 }
+
+.calendar-selected-day {
+    min-height: 1.5rem;
+    margin-top: 1rem;
+    color: var(--text);
+    font-size: 0.85rem;
+    opacity: 0.58;
+    text-align: center;
+}
+
+.calendar-selected-day.selected-day-changing {
+    animation: selected-day-change 220ms ease-out;
+}
+
+@keyframes selected-day-change {
+    from {
+        opacity: 0.25;
+        transform: translateY(0.2rem);
+    }
+    to {
+        opacity: 0.58;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .calendar-selected-day.selected-day-changing {
+        animation: none;
+    }
+}
