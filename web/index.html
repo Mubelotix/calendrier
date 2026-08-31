@@ -1193,8 +1193,20 @@
             grid.innerHTML = '';
 
             const calendrierModule = getActiveCalendrier();
+            let daysInMonth = 30;
 
-            for (let d = 1; d <= 36; d++) {
+            if (repViewingMonth === 13) {
+                const yearStart = calendrierModule.DateTime.from_ymd_hms(
+                    BigInt(repViewingYear), 1n, 1n, 5n, 0n, 0n
+                );
+                const nextYearStart = calendrierModule.DateTime.from_ymd_hms(
+                    BigInt(repViewingYear + 1), 1n, 1n, 5n, 0n, 0n
+                );
+                const yearLength = nextYearStart.timestamp.seconds - yearStart.timestamp.seconds;
+                daysInMonth = Number(yearLength / 100000n) - 12 * 30;
+            }
+
+            for (let d = 1; d <= daysInMonth; d++) {
                 let dt;
                 try {
                     dt = calendrierModule.DateTime.from_ymd_hms(BigInt(repViewingYear), BigInt(repViewingMonth), BigInt(d), BigInt(5), BigInt(0), BigInt(0));
